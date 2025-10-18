@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { Wallet, ConnectWallet } from "@coinbase/onchainkit/wallet";
-import { useIsInMiniApp, useMiniKit } from "@coinbase/onchainkit/minikit";
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
 // import { useQuickAuth } from "@coinbase/onchainkit/minikit";
 import { Connected } from "@coinbase/onchainkit";
 import { config } from "@/app.config";
@@ -19,16 +19,8 @@ export default function Home() {
   //   userFid: string;
   // }>("/api/auth");
 
-  const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsInMiniApp();
-  const { isInMiniApp: isInMiniAppHook } = useIsMiniApp();
+  const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsMiniApp();
   const { setMiniAppReady, isMiniAppReady } = useMiniKit();
-
-
-
-  console.log("isInMiniApp", isInMiniApp);
-  console.log("isInMiniAppHook", isInMiniAppHook);
-  console.log("onlyMiniApp", config.onlyMiniApp);
-  console.log("isMiniAppReady", isMiniAppReady);
 
   useEffect(() => {
     if (!isMiniAppReady) {
@@ -40,9 +32,6 @@ export default function Home() {
     return <LoadingAppScreen />;
   }
 
-  if (true) {
-    return <p>{`isInMiniApp: ${isInMiniApp}, isInMiniAppHook: ${isInMiniAppHook}, onlyMiniApp: ${config.onlyMiniApp}, isMiniAppReady: ${isMiniAppReady}`}</p>
-  }
 
   if (!isInMiniApp && config.onlyMiniApp) {
     return <LaunchMiniAppScreen />;
