@@ -20,7 +20,7 @@ export default function Home() {
   // }>("/api/auth");
 
   const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsInMiniApp();
-  const { isInMiniApp: isInMiniAppHook, isLoading: isInMiniAppLoadingHook } = useIsMiniApp();
+  const { isInMiniApp: isInMiniAppHook } = useIsMiniApp();
   const { setMiniAppReady, isMiniAppReady } = useMiniKit();
 
 

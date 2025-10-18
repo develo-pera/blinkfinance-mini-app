@@ -14,3 +14,5 @@ const useIsMiniApp = () => {
 
   return { isInMiniApp, isLoading };
 };
+
+export default useIsMiniApp; 
