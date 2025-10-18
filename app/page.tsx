@@ -44,6 +44,7 @@ export default function Home() {
           <div className="h-screen flex flex-col items-center justify-center">
 
             <p className="mt-10 mb-5 text-sm">Please connect your wallet to continue</p>
+            {/* TODO: this doesn't work for Farcaster. Try with custom connect wallet button. */}
             <ConnectWallet />
           </div>
         }
