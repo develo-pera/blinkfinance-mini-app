@@ -35,6 +35,10 @@ export default function Home() {
     return <LoadingAppScreen />;
   }
 
+  if (true) {
+    return <p>{`isInMiniApp: ${isInMiniApp}, onlyMiniApp: ${config.onlyMiniApp}, isMiniAppReady: ${isMiniAppReady}`}</p>
+  }
+
   if (!isInMiniApp && config.onlyMiniApp) {
     return <LaunchMiniAppScreen />;
   }
