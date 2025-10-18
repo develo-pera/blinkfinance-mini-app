@@ -10,7 +10,7 @@ export const Loader = ({ className, width = 50, height = 50 }: LoaderProps) => {
   return (
     <div className={`loader-container ${className || ''}`}>
       <div className="loader-beam"></div>
-      <Image className="loader-image" src="/miniapp-logo.jpg" alt="wallet" width={width} height={height} />
+      <Image className="loader-image" src="/miniapp-logo.jpg" alt="wallet" width={width} height={height} priority />
     </div>
   );
 };
