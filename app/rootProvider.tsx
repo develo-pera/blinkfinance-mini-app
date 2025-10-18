@@ -12,6 +12,7 @@ export function RootProvider({ children }: { children: ReactNode }) {
       config={{
         appearance: {
           mode: "auto",
+          theme: "hacker",
         },
         wallet: {
           display: "modal",
@@ -21,6 +22,7 @@ export function RootProvider({ children }: { children: ReactNode }) {
       miniKit={{
         enabled: true,
         autoConnect: true,
+        // TODO: revisit this
         notificationProxyUrl: undefined,
       }}
     >

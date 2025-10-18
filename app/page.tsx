@@ -2,10 +2,22 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { Wallet } from "@coinbase/onchainkit/wallet";
-import { useMiniKit } from "@coinbase/onchainkit/minikit";
+import { useAuthenticate, useMiniKit, useQuickAuth } from "@coinbase/onchainkit/minikit";
 // import { useQuickAuth } from "@coinbase/onchainkit/minikit";
 import styles from "./page.module.css";
 import { ModeToggle } from "./components/common/toggle-mode";
+import { Connected } from "@coinbase/onchainkit";
+import Test from "./components/common/test";
+
+interface AuthResponse {
+  success: boolean;
+  user?: {
+    fid: number; // FID is the unique identifier for the user
+    issuedAt?: number;
+    expiresAt?: number;
+  };
+  message?: string; // Error messages come as 'message' not 'error'
+}
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -17,7 +29,17 @@ export default function Home() {
   //   userFid: string;
   // }>("/api/auth");
 
-  const { setMiniAppReady, isMiniAppReady } = useMiniKit();
+  const { context, setMiniAppReady, isMiniAppReady } = useMiniKit();
+  const { signIn } = useAuthenticate();
+
+  const { data: authData, isLoading: isAuthLoading, error: authError } = useQuickAuth<AuthResponse>(
+    "/api/auth",
+    { method: "GET" }
+  );
+
+  console.log("authData", authData);
+  console.log("isAuthLoading", isAuthLoading);
+  console.log("authError", authError);
 
   useEffect(() => {
     if (!isMiniAppReady) {
@@ -25,61 +47,47 @@ export default function Home() {
     }
   }, [setMiniAppReady, isMiniAppReady]);
 
+  // console.log("context", context);
+  // console.log("contex client fid", context?.client.clientFid);
+
+
   return (
     <div className={styles.container}>
-      <header className={styles.headerWrapper}>
-        <Wallet />
-      </header>
+      <Connected
+        fallback={
+          <>
+            <p>Nisi konektovan</p>
+            <Wallet />
+          </>
+        }
+      >
+        <div className={styles.content}>
+          <p>
+            Context user fid: {context?.user?.fid}
+          </p>
 
-      <div className={styles.content}>
-        <Image
-          priority
-          src="/sphere.svg"
-          alt="Sphere"
-          width={200}
-          height={200}
-        />
-        <h1 className={styles.title}>MiniKit</h1>
+          <button onClick={async () => {
+            const result = await signIn();
+            console.log("result", result);
+          }}>Sign In</button>
 
-        <ModeToggle />
+          <header className={styles.headerWrapper}>
+            <Wallet />
+          </header>
+          <Test />
+          <Image
+            priority
+            src="/sphere.svg"
+            alt="Sphere"
+            width={200}
+            height={200}
+          />
+          <h1 className={styles.title}>MiniKit</h1>
 
-        <p>
-          Get started by editing <code>app/page.tsx</code>
-        </p>
+          <ModeToggle />
+        </div>
+      </Connected>
 
-        <h2 className={styles.componentsTitle}>Explore Components</h2>
-
-        <ul className={styles.components}>
-          {[
-            {
-              name: "Transaction",
-              url: "https://docs.base.org/onchainkit/transaction/transaction",
-            },
-            {
-              name: "Swap",
-              url: "https://docs.base.org/onchainkit/swap/swap",
-            },
-            {
-              name: "Checkout",
-              url: "https://docs.base.org/onchainkit/checkout/checkout",
-            },
-            {
-              name: "Wallet",
-              url: "https://docs.base.org/onchainkit/wallet/wallet",
-            },
-            {
-              name: "Identity",
-              url: "https://docs.base.org/onchainkit/identity/identity",
-            },
-          ].map((component) => (
-            <li key={component.name}>
-              <a target="_blank" rel="noreferrer" href={component.url}>
-                {component.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
   );
 }
