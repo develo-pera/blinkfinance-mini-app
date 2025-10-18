@@ -13,7 +13,7 @@ export function RootProvider({ children }: { children: ReactNode }) {
       config={{
         appearance: {
           mode: "auto",
-          theme: "hacker",
+          theme: "default",
         },
         wallet: {
           display: "modal",
