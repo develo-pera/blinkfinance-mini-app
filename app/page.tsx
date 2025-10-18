@@ -21,6 +21,10 @@ export default function Home() {
   const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsInMiniApp();
   const { setMiniAppReady, isMiniAppReady } = useMiniKit();
 
+  console.log("isInMiniApp", isInMiniApp);
+  console.log("onlyMiniApp", config.onlyMiniApp);
+  console.log("isMiniAppReady", isMiniAppReady);
+
   useEffect(() => {
     if (!isMiniAppReady) {
       setMiniAppReady();
