@@ -1,5 +1,6 @@
 "use client";
 import { useEffect } from "react";
+import Image from "next/image";
 import { Wallet, ConnectWallet } from "@coinbase/onchainkit/wallet";
 import { useMiniKit } from "@coinbase/onchainkit/minikit";
 // import { useQuickAuth } from "@coinbase/onchainkit/minikit";
@@ -42,10 +43,10 @@ export default function Home() {
       <Connected
         fallback={
           <div className="h-screen flex flex-col items-center justify-center">
-
-            <p className="mt-10 mb-5 text-sm">Please connect your wallet to continue</p>
+            <Image className="rounded-sm" src="/miniapp-logo.jpg" alt="Mini App Logo" width={60} height={60} priority />
+            <p className="mt-10 mb-5 text-sm text-center">Please connect your wallet to continue using Blink Finance Mini App</p>
             {/* TODO: this doesn't work for Farcaster. Try with custom connect wallet button. */}
-            <ConnectWallet />
+            <ConnectWallet className="!bg-primary !text-primary-foreground hover:!bg-primary/90" />
           </div>
         }
       >
