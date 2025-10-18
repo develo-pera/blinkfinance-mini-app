@@ -7,6 +7,7 @@ import { Connected } from "@coinbase/onchainkit";
 import { config } from "@/app.config";
 import LoadingAppScreen from "./components/loadingAppScreen";
 import LaunchMiniAppScreen from "./components/launchMiniAppScreen";
+import useIsMiniApp from "./hooks/useIsMiniApp";
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -19,9 +20,13 @@ export default function Home() {
   // }>("/api/auth");
 
   const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsInMiniApp();
+  const { isInMiniApp: isInMiniAppHook, isLoading: isInMiniAppLoadingHook } = useIsMiniApp();
   const { setMiniAppReady, isMiniAppReady } = useMiniKit();
 
+
+
   console.log("isInMiniApp", isInMiniApp);
+  console.log("isInMiniAppHook", isInMiniAppHook);
   console.log("onlyMiniApp", config.onlyMiniApp);
   console.log("isMiniAppReady", isMiniAppReady);
 
@@ -36,7 +41,7 @@ export default function Home() {
   }
 
   if (true) {
-    return <p>{`isInMiniApp: ${isInMiniApp}, onlyMiniApp: ${config.onlyMiniApp}, isMiniAppReady: ${isMiniAppReady}`}</p>
+    return <p>{`isInMiniApp: ${isInMiniApp}, isInMiniAppHook: ${isInMiniAppHook}, onlyMiniApp: ${config.onlyMiniApp}, isMiniAppReady: ${isMiniAppReady}`}</p>
   }
 
   if (!isInMiniApp && config.onlyMiniApp) {
