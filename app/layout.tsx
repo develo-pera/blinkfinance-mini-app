@@ -47,7 +47,7 @@ export default function RootLayout({
         <body className={`${inter.variable} ${sourceCodePro.variable}`}>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
+            defaultTheme="light"
             enableSystem
             disableTransitionOnChange
           >
