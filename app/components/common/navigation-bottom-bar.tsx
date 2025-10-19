@@ -1,4 +1,3 @@
-import { useMiniKit } from "@coinbase/onchainkit/minikit";
 import { cn } from "@/lib/utils";
 
 const NavigationBottomBar = ({ className }: { className?: string }) => {
