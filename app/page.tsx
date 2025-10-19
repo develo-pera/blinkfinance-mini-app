@@ -13,6 +13,7 @@ import Navigation from "./components/common/navigation";
 import NavigationBottomBar from "./components/common/navigation-bottom-bar";
 import { Button } from "@/components/ui/button";
 import { useOpenUrl } from "@coinbase/onchainkit/minikit";
+import sdk from "@farcaster/miniapp-sdk";
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -58,7 +59,15 @@ export default function Home() {
         <div className="min-h-screen h-[3000px]">
           <Navigation />
           <Button onClick={() => {
-            openUrl("/sign-in");
+            openUrl(`${process.env.NEXT_PUBLIC_URL}/sign-in`);
+          }}>
+            Go to Sign In
+          </Button>
+
+          <Button onClick={async () => {
+            console.log("Sign in button clicked");
+            const token = await sdk.quickAuth.getToken();
+            console.log("token", token);
           }}>
             Sign In
           </Button>
