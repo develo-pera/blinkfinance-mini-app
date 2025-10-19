@@ -53,7 +53,6 @@ export default function Home() {
       >
         <div>
           <Wallet />
-          <ModeToggle />
         </div>
       </Connected>
     </div>
