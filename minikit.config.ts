@@ -30,6 +30,6 @@ export const minikitConfig = {
     ogTitle: "Upload invoices. Get cash.",
     ogDescription: "Fast and simple financing for your unpaid invoices.",
     ogImageUrl: `${ROOT_URL}/miniapp-hero.jpg`,
-    noIndex: true,
+    // noindex: true,
   },
 } as const;

@@ -6,10 +6,13 @@ import { useMiniKit } from "@coinbase/onchainkit/minikit";
 // import { useQuickAuth } from "@coinbase/onchainkit/minikit";
 import { Connected } from "@coinbase/onchainkit";
 import { config } from "@/app.config";
-import LoadingAppScreen from "./components/loadingAppScreen";
-import LaunchMiniAppScreen from "./components/launchMiniAppScreen";
+import LoadingAppScreen from "./components/loading-app-screen";
+import LaunchMiniAppScreen from "./components/launch-mini-app-screen";
 import useIsMiniApp from "./hooks/useIsMiniApp";
 import Navigation from "./components/common/navigation";
+import NavigationBottomBar from "./components/common/navigation-bottom-bar";
+import { Button } from "@/components/ui/button";
+import { useOpenUrl } from "@coinbase/onchainkit/minikit";
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -23,6 +26,7 @@ export default function Home() {
 
   const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsMiniApp();
   const { setMiniAppReady, isMiniAppReady } = useMiniKit();
+  const openUrl = useOpenUrl();
 
   useEffect(() => {
     if (!isMiniAppReady) {
@@ -51,8 +55,14 @@ export default function Home() {
           </div>
         }
       >
-        <div>
+        <div className="min-h-screen h-[3000px]">
           <Navigation />
+          <Button onClick={() => {
+            openUrl("/sign-in");
+          }}>
+            Sign In
+          </Button>
+          <NavigationBottomBar />
         </div>
       </Connected>
     </div>

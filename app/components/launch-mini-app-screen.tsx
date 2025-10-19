@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { config } from "@/app.config";
 import { Button } from "@/components/ui/button";
-import ModeImage from "./common/modeImage";
+import ModeImage from "./common/mode-image";
 
 const LaunchMiniAppScreen = () => {
   return (
