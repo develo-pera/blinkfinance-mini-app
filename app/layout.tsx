@@ -47,6 +47,7 @@ export default function RootLayout({
         <body className={`${inter.variable} ${sourceCodePro.variable}`}>
           <ThemeProvider
             attribute="class"
+            // TODO: change to dark mode by default if system isn't working
             defaultTheme="light"
             enableSystem
             disableTransitionOnChange
