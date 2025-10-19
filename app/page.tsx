@@ -9,7 +9,6 @@ import { config } from "@/app.config";
 import LoadingAppScreen from "./components/loadingAppScreen";
 import LaunchMiniAppScreen from "./components/launchMiniAppScreen";
 import useIsMiniApp from "./hooks/useIsMiniApp";
-import { ModeToggle } from "./components/common/toggle-mode";
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
