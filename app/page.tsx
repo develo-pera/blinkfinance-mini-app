@@ -9,6 +9,7 @@ import { config } from "@/app.config";
 import LoadingAppScreen from "./components/loadingAppScreen";
 import LaunchMiniAppScreen from "./components/launchMiniAppScreen";
 import useIsMiniApp from "./hooks/useIsMiniApp";
+import Navigation from "./components/common/navigation";
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -51,7 +52,7 @@ export default function Home() {
         }
       >
         <div>
-          <Wallet />
+          <Navigation />
         </div>
       </Connected>
     </div>

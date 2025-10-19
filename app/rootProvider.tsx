@@ -13,12 +13,13 @@ export function RootProvider({ children }: { children: ReactNode }) {
       config={{
         appearance: {
           mode: "auto",
-          theme: "default",
+          theme: "hacker",
         },
         wallet: {
           display: "modal",
           preference: "all",
         },
+        analytics: false,
       }}
       miniKit={{
         enabled: true,
