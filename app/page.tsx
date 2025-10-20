@@ -1,6 +1,8 @@
 "use client";
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useAccount } from "wagmi";
 import { ConnectWallet } from "@coinbase/onchainkit/wallet";
 import { useMiniKit } from "@coinbase/onchainkit/minikit";
 // import { useQuickAuth } from "@coinbase/onchainkit/minikit";
@@ -11,7 +13,6 @@ import LaunchMiniAppScreen from "./components/launch-mini-app-screen";
 import useIsMiniApp from "./hooks/useIsMiniApp";
 import Navigation from "./components/common/navigation";
 import NavigationBottomBar from "./components/common/navigation-bottom-bar";
-import { useState } from "react";
 import CONSTANTS from "@/lib/consts";
 
 export default function Home() {
@@ -26,8 +27,10 @@ export default function Home() {
   const [allowDemo, setAllowDemo] = useState(false);
   const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsMiniApp();
   const { context, setMiniAppReady, isMiniAppReady } = useMiniKit();
+  const { address } = useAccount();
 
   console.log("context", context);
+  console.log("address", address)
   // console.log("data", data);
   // console.log("error", error);
 
@@ -66,16 +69,16 @@ export default function Home() {
         fallback={
           <div className="h-screen flex flex-col items-center justify-center">
             <Image className="rounded-sm" src="/miniapp-logo.jpg" alt="Mini App Logo" width={60} height={60} priority />
-            <p className="mt-10 mb-5 text-sm text-center">Please connect your wallet to continue using Blink Finance Mini App</p>
+            <p className="mt-10 mb-5 text-sm text-center max-w-[250px]">Please connect your wallet to continue using Blink Finance Mini App</p>
             {/* TODO: this doesn't work for Farcaster. Try with custom connect wallet button. */}
             <ConnectWallet className="!bg-primary !text-primary-foreground hover:!bg-primary/90" />
           </div>
         }
       >
-        <div className="min-h-screen h-[3000px]">
+        <div className="min-h-screen">
           <Navigation />
 
-          <NavigationBottomBar />
+          <NavigationBottomBar user={context?.user} address={address} />
         </div>
       </Connected>
     </div>
