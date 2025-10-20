@@ -52,7 +52,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <SafeArea>{children}</SafeArea>
+            <div className="max-w-screen-sm mx-auto relative w-full">
+              <SafeArea>{children}</SafeArea>
+            </div>
           </ThemeProvider>
         </body>
       </html>

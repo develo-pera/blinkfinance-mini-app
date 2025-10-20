@@ -6,14 +6,14 @@ import { ReceiptText, SquarePlus } from "lucide-react";
 
 const NavigationBottomBar = ({ className, user, address }: { className?: string, user?: Context.UserContext, address?: Address }) => {
   return (
-    <div className={cn("px-2 py-4 fixed bottom-0 left-0 right-0 border-t border-border", className)}>
-      <div className="grid grid-cols-3 items-center gap-10">
+    <div className={cn("px-2 py-4 fixed bottom-0 left-0 right-0 z-50", className)}>
+      <div className="flex items-center justify-between gap-10 p-4 py-3 dark:bg-[#131313] bg-[#f5f5f5] rounded-sm">
         <div className="flex items-center justify-center">
-          <ReceiptText className="w-8 h-8 text-foreground stroke-[1.5px]" />
+          <ReceiptText className="w-8 h-8 text-foreground stroke-[1.5px] opacity-70" />
         </div>
 
         <div className="flex items-center justify-center">
-          <SquarePlus className="w-8 h-8 text-foreground stroke-[1.5px]" />
+          <SquarePlus className="w-8 h-8 text-foreground stroke-[1.5px] opacity-70" />
         </div>
         <div className="flex items-center justify-center">
           <UserAvatar onClick={() => { console.log("Click Avatar") }} user={user} address={address} />

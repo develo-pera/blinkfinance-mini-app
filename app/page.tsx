@@ -32,7 +32,6 @@ export default function Home() {
   const { address } = useAccount();
 
   console.log("context", context);
-  console.log("address", address)
   // console.log("data", data);
   // console.log("error", error);
 
@@ -90,7 +89,8 @@ export default function Home() {
         <div className="min-h-screen">
           <Navigation />
 
-          <NavigationBottomBar user={context?.user} address={address} />
+          {/* TODO: Remove mx-auto max-w-screen-md after demo is disabled. App will be available only as Mini App. */}
+          <NavigationBottomBar className="mx-auto max-w-screen-sm" user={context?.user} address={address} />
         </div>
       </Connected>
     </div>
