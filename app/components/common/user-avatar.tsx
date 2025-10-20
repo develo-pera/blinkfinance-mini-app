@@ -6,8 +6,8 @@ import { ScanFace } from "lucide-react";
 import { Loader } from "./loader";
 
 const UserAvatar = ({ user, address, onClick }: { user?: Context.UserContext, address?: Address, onClick?: () => void }) => {
-  const { data: name, isLoading: isNameLoading, error: nameError } = useName({ address: address as `0x${string}`, chain: mainnet as Chain });
-  const { data: avatar, isLoading: isAvatarLoading, error: avatarError } = useAvatar({ ensName: name as string, chain: mainnet as Chain });
+  const { data: name, isLoading: isNameLoading } = useName({ address: address as `0x${string}`, chain: mainnet as Chain });
+  const { data: avatar, isLoading: isAvatarLoading } = useAvatar({ ensName: name as string, chain: mainnet as Chain });
 
   if (user && user?.pfpUrl) {
     return (
