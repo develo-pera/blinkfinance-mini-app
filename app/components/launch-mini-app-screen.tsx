@@ -35,9 +35,9 @@ const LaunchMiniAppScreen = ({ enableDemo }: LaunchMiniAppScreenProps) => {
       {
         config.allowDemo && (
           <div className="mt-10 text-center max-w-[250px] mx-auto border-t border-border pt-8">
-            <p className="text-sm">Or if you promise to be Base Batches judge you can proceed within the app in the browser as well to demo it.</p>
+            <p className="text-sm">Or if you promise to be a Base Batches judge you can proceed within the app in the browser as well to demo it.</p>
             <Button className="mt-7 w-[250px]" onClick={setAllowDemo}>
-              I'm a Base Batches judge, let me in
+              I&apos;m a Base Batches judge, let me in
             </Button>
             <p className="text-xs mt-2">Allow demo functionality will be removed after Nov 17.</p>
           </div>
