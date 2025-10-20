@@ -11,6 +11,8 @@ import LaunchMiniAppScreen from "./components/launch-mini-app-screen";
 import useIsMiniApp from "./hooks/useIsMiniApp";
 import Navigation from "./components/common/navigation";
 import NavigationBottomBar from "./components/common/navigation-bottom-bar";
+import { useState } from "react";
+import CONSTANTS from "@/lib/consts";
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -18,14 +20,30 @@ export default function Home() {
   // this to meet your needs. See the /app/api/auth/route.ts file for more details.
   // Note: If you don't need to verify the user's identity, you can get their FID and other user data
   // via `useMiniKit().context?.user`.
-  // const { data, isLoading, error } = useQuickAuth<{
+  // const { data, isLoading: isQuickAuthLoading, error } = useQuickAuth<{
   //   userFid: string;
   // }>("/api/auth");
-
+  const [allowDemo, setAllowDemo] = useState(false);
   const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsMiniApp();
   const { context, setMiniAppReady, isMiniAppReady } = useMiniKit();
 
   console.log("context", context);
+  // console.log("data", data);
+  // console.log("error", error);
+
+  useEffect(() => {
+    const allowDemo = localStorage.getItem(CONSTANTS.localStorageKeys.BFAllowDemo);
+    if (allowDemo === "true") {
+      setAllowDemo(true);
+    }
+
+    // Only load Eruda in development and not on localhost
+    if (typeof window !== 'undefined' &&
+      process.env.NODE_ENV === 'development' &&
+      !window.location.hostname.includes('localhost')) {
+      import('eruda').then((eruda) => eruda.default.init());
+    }
+  }, []);
 
   useEffect(() => {
     if (!isMiniAppReady) {
@@ -37,9 +55,9 @@ export default function Home() {
     return <LoadingAppScreen />;
   }
 
-
-  if (!isInMiniApp && config.onlyMiniApp) {
-    return <LaunchMiniAppScreen />;
+  const demoEnabled = allowDemo && config.allowDemo;
+  if (!isInMiniApp && config.onlyMiniApp && !demoEnabled) {
+    return <LaunchMiniAppScreen enableDemo={setAllowDemo} />;
   }
 
   return (
