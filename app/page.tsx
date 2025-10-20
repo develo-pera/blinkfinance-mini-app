@@ -8,12 +8,13 @@ import { useMiniKit } from "@coinbase/onchainkit/minikit";
 // import { useQuickAuth } from "@coinbase/onchainkit/minikit";
 import { Connected } from "@coinbase/onchainkit";
 import { config } from "@/app.config";
+import CONSTANTS from "@/lib/consts";
 import LoadingAppScreen from "./components/loading-app-screen";
 import LaunchMiniAppScreen from "./components/launch-mini-app-screen";
 import useIsMiniApp from "./hooks/useIsMiniApp";
 import Navigation from "./components/common/navigation";
 import NavigationBottomBar from "./components/common/navigation-bottom-bar";
-import CONSTANTS from "@/lib/consts";
+import Onboarding from "./components/onboarding";
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -25,6 +26,7 @@ export default function Home() {
   //   userFid: string;
   // }>("/api/auth");
   const [allowDemo, setAllowDemo] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsMiniApp();
   const { context, setMiniAppReady, isMiniAppReady } = useMiniKit();
   const { address } = useAccount();
@@ -38,6 +40,12 @@ export default function Home() {
     const allowDemo = localStorage.getItem(CONSTANTS.localStorageKeys.BFAllowDemo);
     if (allowDemo === "true") {
       setAllowDemo(true);
+    }
+
+    // TODO: This should be stored in a database for each user.
+    const onboadingCompleted = localStorage.getItem(CONSTANTS.localStorageKeys.BFOnboadingCompleted);
+    if (!onboadingCompleted) {
+      setShowOnboarding(true);
     }
 
     // Only load Eruda in development and not on localhost
@@ -61,6 +69,10 @@ export default function Home() {
   const demoEnabled = allowDemo && config.allowDemo;
   if (!isInMiniApp && config.onlyMiniApp && !demoEnabled) {
     return <LaunchMiniAppScreen enableDemo={setAllowDemo} />;
+  }
+
+  if (showOnboarding) {
+    return <Onboarding setShowOnboarding={setShowOnboarding} />;
   }
 
   return (
