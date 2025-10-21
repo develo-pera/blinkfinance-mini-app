@@ -33,7 +33,7 @@ const ProfilePage = ({ user, address }: { user?: Context.UserContext, address?: 
         <p className="text-sm text-gray-500">petar@ethbelgrade.rs</p>
       </div>
 
-      <div className="mt-10 p-4 bg-[var(--bf-card-background)] rounded-2xl">
+      <div className="my-10 p-4 bg-[var(--bf-card-background)] rounded-2xl">
         <h2 className="text-3xl">Your Company</h2>
         <div className="mt-5 bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] rounded-xl p-4">
           <div className="flex items-start justify-between gap-5">
