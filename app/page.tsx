@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAccount } from "wagmi";
-import { ConnectWallet } from "@coinbase/onchainkit/wallet";
+import { ConnectWallet, Wallet } from "@coinbase/onchainkit/wallet";
 import { useMiniKit } from "@coinbase/onchainkit/minikit";
 // import { useQuickAuth } from "@coinbase/onchainkit/minikit";
 import { Connected } from "@coinbase/onchainkit";
@@ -12,9 +12,15 @@ import CONSTANTS from "@/lib/consts";
 import LoadingAppScreen from "./components/loading-app-screen";
 import LaunchMiniAppScreen from "./components/launch-mini-app-screen";
 import useIsMiniApp from "./hooks/useIsMiniApp";
-import Navigation from "./components/common/navigation";
+import Header from "./components/common/header";
 import NavigationBottomBar from "./components/common/navigation-bottom-bar";
 import Onboarding from "./components/onboarding";
+import HomePage from "./components/pages/home";
+import UploadPage from "./components/pages/upload";
+import WalletPage from "./components/pages/wallet";
+import ProfilePage from "./components/pages/profile";
+
+export type ActivePage = "home" | "upload" | "wallet" | "profile";
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -30,6 +36,7 @@ export default function Home() {
   const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsMiniApp();
   const { context, setMiniAppReady, isMiniAppReady } = useMiniKit();
   const { address } = useAccount();
+  const [activePage, setActivePage] = useState<ActivePage>("home");
 
   console.log("context", context);
   // console.log("data", data);
@@ -87,10 +94,13 @@ export default function Home() {
         }
       >
         <div className="min-h-screen">
-          <Navigation />
-
+          <Header />
+          {activePage === "home" && <HomePage />}
+          {activePage === "upload" && <UploadPage />}
+          {activePage === "wallet" && <WalletPage />}
+          {activePage === "profile" && <ProfilePage />}
           {/* TODO: Remove mx-auto max-w-screen-md after demo is disabled. App will be available only as Mini App. */}
-          <NavigationBottomBar className="mx-auto max-w-screen-sm" user={context?.user} address={address} />
+          <NavigationBottomBar setActivePage={setActivePage} className="mx-auto max-w-screen-sm" user={context?.user} address={address} />
         </div>
       </Connected>
     </div>

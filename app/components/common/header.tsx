@@ -2,7 +2,7 @@ import Image from "next/image";
 import { ModeToggle } from "./toggle-mode";
 import { cn } from "@/lib/utils";
 
-const Navigation = ({ className }: { className?: string }) => {
+const Header = ({ className }: { className?: string }) => {
   return (
     <div className={cn("p-4", className)}>
       <div className="flex items-center justify-between">
@@ -13,4 +13,4 @@ const Navigation = ({ className }: { className?: string }) => {
   );
 };
 
-export default Navigation;
+export default Header;
