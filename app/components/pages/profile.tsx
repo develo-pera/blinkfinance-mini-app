@@ -7,7 +7,7 @@ const ProfilePage = ({ user }: { user?: Context.UserContext }) => {
   return (
     <div className="px-4 flex flex-col flex-1">
       <div className="mt-10 px-4">
-        <h1 className="text-2xl font-bold">Petar Popovic</h1>
+        <h1 className="text-2xl font-bold">{user?.displayName || "Developera"}</h1>
         <p>developera.eth</p>
 
         <p className="text-sm text-gray-500">petar@ethbelgrade.rs</p>
