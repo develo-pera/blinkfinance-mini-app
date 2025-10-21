@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Context } from "@farcaster/miniapp-sdk";
 import Image from "next/image";
-import { LogOut } from "lucide-react";
+import { Building2, LogOut, Pencil } from "lucide-react";
 import { useDisconnect } from "wagmi";
 import { Address } from "viem";
 import { useName } from "@coinbase/onchainkit/identity";
@@ -48,7 +48,18 @@ const ProfilePage = ({ user, address }: { user?: Context.UserContext, address?: 
         </div>
       </div>
 
-      <Button onClick={() => disconnect()} className="mt-auto w-full rounded-xl">
+      <div className="mt-auto grid grid-cols-2 gap-5">
+        <Button onClick={() => console.log("Edit profile")} className=" w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
+          <Pencil className="w-4h-4" /> Edit profile
+        </Button>
+
+        <Button onClick={() => console.log("Edit company")} className="w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
+          <Building2 className="w-4h-4" /> Edit Company
+        </Button>
+      </div>
+
+
+      <Button onClick={() => disconnect()} className="mt-5 w-full rounded-xl">
         <LogOut className="w-4h-4" /> Log out
       </Button>
     </div>
