@@ -74,7 +74,7 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
         {/* Animated indicator */}
         <div
           ref={indicatorRef}
-          className="absolute w-9 h-9 bg-[var(--bf-purple)] rounded-full pointer-events-none transition-all duration-300 ease-out"
+          className="absolute w-10 h-10 bg-[var(--bf-purple)] rounded-full pointer-events-none transition-all duration-300 ease-out"
           style={{
             transform: "translate(-50%, -50%)",
             zIndex: 1
