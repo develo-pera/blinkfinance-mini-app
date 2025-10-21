@@ -4,21 +4,133 @@ import { Address } from "viem";
 import { ReceiptText, SquarePlus, Wallet } from "lucide-react";
 import UserAvatar from "./user-avatar";
 import { ActivePage } from "@/app/page";
+import { useEffect, useRef } from "react";
 
-const NavigationBottomBar = ({ className, user, address, setActivePage }: { className?: string, user?: Context.UserContext, address?: Address, setActivePage: (page: ActivePage) => void }) => {
+const NavigationBottomBar = ({ className, user, address, setActivePage, activePage }: { className?: string, user?: Context.UserContext, address?: Address, setActivePage: (page: ActivePage) => void, activePage: ActivePage }) => {
+  const indicatorRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const homeRef = useRef<HTMLDivElement>(null);
+  const uploadRef = useRef<HTMLDivElement>(null);
+  const walletRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  const updateIndicatorPosition = () => {
+    if (!indicatorRef.current || !containerRef.current) return;
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    let targetElement: HTMLDivElement | null = null;
+
+    switch (activePage) {
+      case 'home':
+        targetElement = homeRef.current;
+        break;
+      case 'upload':
+        targetElement = uploadRef.current;
+        break;
+      case 'wallet':
+        targetElement = walletRef.current;
+        break;
+      case 'profile':
+        targetElement = profileRef.current;
+        break;
+      default:
+        return;
+    }
+
+    if (targetElement) {
+      const targetRect = targetElement.getBoundingClientRect();
+
+      // Calculate the center of the target element relative to the container
+      const targetCenterX = targetRect.left - containerRect.left + (targetRect.width / 2);
+      const targetCenterY = targetRect.top - containerRect.top + (targetRect.height / 2);
+
+      indicatorRef.current.style.left = `${targetCenterX}px`;
+      indicatorRef.current.style.top = `${targetCenterY}px`;
+    }
+  };
+
+  useEffect(() => {
+    // Small delay to ensure DOM is fully rendered
+    const timer = setTimeout(() => {
+      updateIndicatorPosition();
+    }, 0);
+
+    // Update position on window resize
+    const handleResize = () => updateIndicatorPosition();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [activePage]);
+
+  const handlePageClick = (page: ActivePage) => {
+    setActivePage(page);
+  };
   return (
     <div className={cn("px-2 py-4 fixed bottom-0 left-0 right-0 z-50", className)}>
-      <div className="flex items-center justify-between gap-10 p-4 py-3 dark:bg-[#131313] bg-[#f5f5f5] rounded-sm">
-        <div onClick={() => setActivePage("home")} className="flex items-center justify-center">
-          <ReceiptText className="w-6 h-6 text-foreground stroke-[1.5px] opacity-70" />
+      <div ref={containerRef} className="relative flex items-center justify-between gap-10 p-4 py-3 dark:bg-[#131313] bg-[#f5f5f5] rounded-full">
+        {/* Animated indicator */}
+        <div
+          ref={indicatorRef}
+          className="absolute w-9 h-9 bg-[var(--bf-purple)] rounded-full pointer-events-none transition-all duration-300 ease-out"
+          style={{
+            transform: 'translate(-50%, -50%)',
+            zIndex: 1
+          }}
+        />
+
+        <div
+          ref={homeRef}
+          onClick={() => handlePageClick("home")}
+          className="relative flex items-center justify-center cursor-pointer hover:scale-110 transition-transform duration-200 z-10"
+        >
+          <ReceiptText
+            className={cn(
+              "w-6 h-6 stroke-[1.5px] transition-all duration-200",
+              activePage === "home"
+                ? "text-background opacity-100"
+                : "text-foreground opacity-70"
+            )}
+          />
         </div>
-        <div onClick={() => setActivePage("upload")} className="flex items-center justify-center">
-          <SquarePlus className="w-6 h-6 text-foreground stroke-[1.5px] opacity-70" />
+
+        <div
+          ref={uploadRef}
+          onClick={() => handlePageClick("upload")}
+          className="relative flex items-center justify-center cursor-pointer hover:scale-110 transition-transform duration-200 z-10"
+        >
+          <SquarePlus
+            className={cn(
+              "w-6 h-6 stroke-[1.5px] transition-all duration-200",
+              activePage === "upload"
+                ? "text-background opacity-100"
+                : "text-foreground opacity-70"
+            )}
+          />
         </div>
-        <div onClick={() => setActivePage("wallet")} className="flex items-center justify-center">
-          <Wallet className="w-6 h-6 text-foreground stroke-[1.5px] opacity-70" />
+
+        <div
+          ref={walletRef}
+          onClick={() => handlePageClick("wallet")}
+          className="relative flex items-center justify-center cursor-pointer hover:scale-110 transition-transform duration-200 z-10"
+        >
+          <Wallet
+            className={cn(
+              "w-6 h-6 stroke-[1.5px] transition-all duration-200",
+              activePage === "wallet"
+                ? "text-background opacity-100"
+                : "text-foreground opacity-70"
+            )}
+          />
         </div>
-        <div onClick={() => setActivePage("profile")} className="flex items-center justify-center">
+
+        <div
+          ref={profileRef}
+          onClick={() => handlePageClick("profile")}
+          className="relative flex items-center justify-center cursor-pointer hover:scale-110 transition-transform duration-200 z-10"
+        >
           <UserAvatar onClick={() => { console.log("Click Avatar") }} user={user} address={address} />
         </div>
       </div>

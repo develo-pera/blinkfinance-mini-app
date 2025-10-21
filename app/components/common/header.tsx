@@ -6,7 +6,7 @@ const Header = ({ className }: { className?: string }) => {
   return (
     <div className={cn("p-4", className)}>
       <div className="flex items-center justify-between">
-        <Image src="/miniapp-logo.jpg" alt="Mini App Logo" width={42} height={42} priority />
+        <Image className="rounded-sm" src="/miniapp-logo.jpg" alt="Mini App Logo" width={42} height={42} priority />
         <ModeToggle />
       </div>
     </div>

@@ -77,6 +77,8 @@
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --bf-green: #0c8a4d;
+  --bf-blue: #007aff;
+  --bf-purple: #c18be8;
 }
 
 .dark {
