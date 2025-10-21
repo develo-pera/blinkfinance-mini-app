@@ -93,12 +93,14 @@ export default function Home() {
           </div>
         }
       >
-        <div className="min-h-screen">
+        <div className="min-h-screen flex flex-col">
           <Header />
-          {activePage === "home" && <HomePage />}
-          {activePage === "upload" && <UploadPage />}
-          {activePage === "wallet" && <WalletPage />}
-          {activePage === "profile" && <ProfilePage />}
+          <div className="flex flex-1 pb-[90px]">
+            {activePage === "home" && <HomePage />}
+            {activePage === "upload" && <UploadPage />}
+            {activePage === "wallet" && <WalletPage />}
+            {activePage === "profile" && <ProfilePage />}
+          </div>
           {/* TODO: Remove mx-auto max-w-screen-md after demo is disabled. App will be available only as Mini App. */}
           <NavigationBottomBar setActivePage={setActivePage} activePage={activePage} className="mx-auto max-w-screen-sm" user={context?.user} address={address} />
         </div>

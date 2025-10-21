@@ -77,8 +77,11 @@
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --bf-green: #0c8a4d;
+  --bf-light-green: #96E983;
   --bf-blue: #007aff;
-  --bf-purple: #c18be8;
+  --bf-purple: #A78AF8;
+  --bf-dark-purple: #4A2AF3;
+  --bf-card-background: #e7e7e7;
 }
 
 .dark {
@@ -113,6 +116,7 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+  --bf-card-background: #131313;
 }
 
 @layer base {
