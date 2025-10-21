@@ -21,16 +21,16 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
     let targetElement: HTMLDivElement | null = null;
 
     switch (activePage) {
-      case 'home':
+      case "home":
         targetElement = homeRef.current;
         break;
-      case 'upload':
+      case "upload":
         targetElement = uploadRef.current;
         break;
-      case 'wallet':
+      case "wallet":
         targetElement = walletRef.current;
         break;
-      case 'profile':
+      case "profile":
         targetElement = profileRef.current;
         break;
       default:
@@ -57,11 +57,11 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
 
     // Update position on window resize
     const handleResize = () => updateIndicatorPosition();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, [activePage]);
 
@@ -76,7 +76,7 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
           ref={indicatorRef}
           className="absolute w-9 h-9 bg-[var(--bf-purple)] rounded-full pointer-events-none transition-all duration-300 ease-out"
           style={{
-            transform: 'translate(-50%, -50%)',
+            transform: "translate(-50%, -50%)",
             zIndex: 1
           }}
         />

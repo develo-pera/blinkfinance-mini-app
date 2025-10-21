@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAccount } from "wagmi";
-import { ConnectWallet, Wallet } from "@coinbase/onchainkit/wallet";
+import { ConnectWallet } from "@coinbase/onchainkit/wallet";
 import { useMiniKit } from "@coinbase/onchainkit/minikit";
 // import { useQuickAuth } from "@coinbase/onchainkit/minikit";
 import { Connected } from "@coinbase/onchainkit";
