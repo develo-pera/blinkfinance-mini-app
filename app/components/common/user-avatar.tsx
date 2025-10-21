@@ -5,7 +5,7 @@ import { Address, Chain } from "viem";
 import { ScanFace } from "lucide-react";
 import { Loader } from "./loader";
 
-const UserAvatar = ({ user, address, onClick }: { user?: Context.UserContext, address?: Address, onClick?: () => void }) => {
+const UserAvatar = ({ user, address, onClick, children }: { user?: Context.UserContext, address?: Address, onClick?: () => void, children?: React.ReactNode }) => {
   const { data: name, isLoading: isNameLoading } = useName({ address: address as `0x${string}`, chain: mainnet as Chain });
   const { data: avatar, isLoading: isAvatarLoading } = useAvatar({ ensName: name as string, chain: mainnet as Chain });
 
@@ -26,7 +26,9 @@ const UserAvatar = ({ user, address, onClick }: { user?: Context.UserContext, ad
   }
 
   return (
-    <ScanFace className="w-8 h-8 text-foreground stroke-[1.5px] opacity-70" />
+    <div onClick={onClick}>
+      {children || <ScanFace className="w-8 h-8 text-foreground stroke-[1.5px] opacity-70" />}
+    </div>
   )
 };
 

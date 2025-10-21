@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Context } from "@farcaster/miniapp-sdk";
 import { Address } from "viem";
-import { ReceiptText, SquarePlus, Wallet } from "lucide-react";
+import { ReceiptText, ScanFace, SquarePlus, Wallet } from "lucide-react";
 import UserAvatar from "./user-avatar";
 import { ActivePage } from "@/app/page";
 import { useEffect, useRef } from "react";
@@ -131,7 +131,16 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
           onClick={() => handlePageClick("profile")}
           className="relative flex items-center justify-center cursor-pointer hover:scale-110 transition-transform duration-200 z-10"
         >
-          <UserAvatar onClick={() => { console.log("Click Avatar") }} user={user} address={address} />
+          <UserAvatar onClick={() => { console.log("Click Avatar") }} user={user} address={address}>
+            <ScanFace
+              className={cn(
+                "w-6 h-6 stroke-[1.5px] transition-all duration-200",
+                activePage === "profile"
+                  ? "text-background opacity-100"
+                  : "text-foreground opacity-70"
+              )}
+            />
+          </UserAvatar>
         </div>
       </div>
     </div>
