@@ -1,14 +1,34 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Context } from "@farcaster/miniapp-sdk";
 import Image from "next/image";
 import { LogOut } from "lucide-react";
+import { useDisconnect } from "wagmi";
+import { Address } from "viem";
+import { useName } from "@coinbase/onchainkit/identity";
+import { base, mainnet } from "wagmi/chains";
+import { Chain } from "viem";
+import { truncateAddress } from "@/lib/utils";
 
-const ProfilePage = ({ user }: { user?: Context.UserContext }) => {
+const ProfilePage = ({ user, address }: { user?: Context.UserContext, address?: Address }) => {
+  const { disconnect } = useDisconnect();
+  const { data: ensName, isLoading: isEnsNameLoading } = useName({ address: address as `0x${string}`, chain: mainnet as Chain });
+  const { data: baseEnsName, isLoading: isBaseEnsNameLoading } = useName({ address: address as `0x${string}`, chain: base as Chain });
+
+  const displayDomain = ensName || baseEnsName;
+
+  // TODO: if data is loading, show skeleton loader.
+
+  console.log("isEnsNameLoading", isEnsNameLoading);
+  console.log("isBaseEnsNameLoading", isBaseEnsNameLoading);
+
   return (
     <div className="px-4 flex flex-col flex-1">
       <div className="mt-10 px-4">
+        {/* TODO */}
         <h1 className="text-2xl font-bold">{user?.displayName || "Developera"}</h1>
-        <p>developera.eth</p>
+        <p>{displayDomain || truncateAddress(address as Address)}</p>
 
         <p className="text-sm text-gray-500">petar@ethbelgrade.rs</p>
       </div>
@@ -21,14 +41,14 @@ const ProfilePage = ({ user }: { user?: Context.UserContext }) => {
             <Image src="https://joobpool-production.s3.amazonaws.com/ETH%20Belgrade/eth-bdg.jpg" alt="company logo" width={50} height={50} className="rounded-sm" />
           </div>
           <div className="mt-15 text-sm">
-            <p>VAT: 1234567890</p>
-            <p>Reg. No: 1234567890</p>
-            <p>Address: 123 Main St, Anytown, USA</p>
+            <p>VAT: <span className="opacity-60">1234567890</span></p>
+            <p>Reg. No: <span className="opacity-60">1234567890</span></p>
+            <p>Address: <span className="opacity-60">123 Main St, Anytown, USA</span></p>
           </div>
         </div>
       </div>
 
-      <Button onClick={() => console.log("Logout me")} className="mt-auto w-full rounded-xl">
+      <Button onClick={() => disconnect()} className="mt-auto w-full rounded-xl">
         <LogOut className="w-4h-4" /> Log out
       </Button>
     </div>

@@ -99,7 +99,7 @@ export default function Home() {
             {activePage === "home" && <HomePage />}
             {activePage === "upload" && <UploadPage />}
             {activePage === "wallet" && <WalletPage />}
-            {activePage === "profile" && <ProfilePage />}
+            {activePage === "profile" && <ProfilePage user={context?.user} address={address} />}
           </div>
           {/* TODO: Remove mx-auto max-w-screen-md after demo is disabled. App will be available only as Mini App. */}
           <NavigationBottomBar setActivePage={setActivePage} activePage={activePage} className="mx-auto max-w-screen-sm" user={context?.user} address={address} />
