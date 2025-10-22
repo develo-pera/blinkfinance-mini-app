@@ -5,6 +5,7 @@ import { ReceiptText, ScanFace, SquarePlus, Wallet } from "lucide-react";
 import UserAvatar from "./user-avatar";
 import { ActivePage } from "@/app/page";
 import { useEffect, useRef } from "react";
+import { useKeyboardDetection } from "@/app/hooks/useKeyboardDetection";
 
 const NavigationBottomBar = ({ className, user, address, setActivePage, activePage }: { className?: string, user?: Context.UserContext, address?: Address, setActivePage: (page: ActivePage) => void, activePage: ActivePage }) => {
   const indicatorRef = useRef<HTMLDivElement>(null);
@@ -13,6 +14,7 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
   const uploadRef = useRef<HTMLDivElement>(null);
   const walletRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const isKeyboardOpen = useKeyboardDetection();
 
   const updateIndicatorPosition = () => {
     if (!indicatorRef.current || !containerRef.current) return;
@@ -70,6 +72,11 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
   };
 
   const showAnimatedIndicator = activePage === "home" || activePage === "upload" || activePage === "wallet" || activePage === "profile";
+
+  // Don't render if keyboard is open
+  if (isKeyboardOpen) {
+    return null;
+  }
 
   return (
     <div className={cn("px-4 py-4 fixed bottom-0 left-0 right-0 z-50", className)}>
