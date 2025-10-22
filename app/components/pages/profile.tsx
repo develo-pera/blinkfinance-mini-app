@@ -61,7 +61,6 @@ const ProfilePage = ({ user, address }: { user?: Context.UserContext, address?: 
         </Button>
       </div>
 
-
       <Button onClick={() => disconnect()} className="mt-5 w-full rounded-xl">
         <LogOut className="w-4h-4" /> Log out
       </Button>

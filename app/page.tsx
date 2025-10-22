@@ -89,7 +89,7 @@ export default function Home() {
             <Image className="rounded-sm" src="/miniapp-logo.jpg" alt="Mini App Logo" width={60} height={60} priority />
             <p className="mt-10 mb-5 text-sm text-center max-w-[250px]">Please connect your wallet to continue using Blink Finance Mini App</p>
             {/* TODO: this doesn't work for Farcaster. Try with custom connect wallet button. */}
-            <ConnectWallet className="!bg-primary !text-primary-foreground hover:!bg-primary/90" />
+            <ConnectWallet onConnect={() => console.log("connected BREE!")} className="!bg-primary !text-primary-foreground hover:!bg-primary/90" />
           </div>
         }
       >

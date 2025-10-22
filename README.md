@@ -11,6 +11,8 @@ First, install dependencies:
 npm install
 ```
 
+Follow DATABASE_SETUP.md guide.
+
 Next, run the development server:
 
 ```bash
