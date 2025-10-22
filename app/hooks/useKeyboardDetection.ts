@@ -1,36 +1,26 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from 'react';
 
-export const useKeyboardDetection = () => {
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+export const useIsVirtualKeyboardOpen = () => {
+  const [isVirtualKeyboardOpen, setIsVirtualKeyboardOpen] =
+    useState<boolean>(false);
+
+  const prevHeight = useRef<number>(0);
+
+  const listener = () => {
+    // The visual viewport is the visual portion of a screen excluding on-screen keyboards,
+    // areas outside of a pinch-zoom area, or any other on-screen artifact that doesn't scale with the dimensions of a page.
+    const visualViewportHeight = window.visualViewport?.height ?? 0;
+    setIsVirtualKeyboardOpen(visualViewportHeight === prevHeight.current);
+  };
 
   useEffect(() => {
-    const handleResize = () => {
-      // Get initial viewport height
-      const initialHeight = window.innerHeight;
+    prevHeight.current = window.innerHeight;
 
-      // Check if viewport height decreased significantly (keyboard open)
-      const currentHeight = window.innerHeight;
-      const heightDifference = initialHeight - currentHeight;
-
-      // If height decreased by more than 150px, keyboard is likely open
-      setIsKeyboardOpen(heightDifference > 150);
-    };
-
-    // Listen for resize events
-    window.addEventListener("resize", handleResize);
-
-    // Also listen for visual viewport changes (more accurate on some devices)
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleResize);
-    }
-
+    window.visualViewport?.addEventListener('resize', listener);
     return () => {
-      window.removeEventListener("resize", handleResize);
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", handleResize);
-      }
+      window.visualViewport?.removeEventListener('resize', listener);
     };
   }, []);
 
-  return isKeyboardOpen;
+  return { isVirtualKeyboardOpen };
 };
