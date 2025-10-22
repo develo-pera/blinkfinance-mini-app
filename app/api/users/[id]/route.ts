@@ -5,11 +5,11 @@ import { User } from '@/models/User';
 // GET /api/users/[id] - Get user by id
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { fid: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     await connectDB();
-    const user = await User.findOne({ id: params.fid });
+    const user = await User.findOne({ id: params.id });
 
     if (!user) {
       return NextResponse.json(
@@ -31,14 +31,14 @@ export async function GET(
 // PUT /api/users/[id] - Update user
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { fid: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     await connectDB();
     const body = await request.json();
 
     const user = await User.findOneAndUpdate(
-      { id: params.fid },
+      { id: params.id },
       body,
       { new: true, runValidators: true }
     );
@@ -63,12 +63,12 @@ export async function PUT(
 // DELETE /api/users/[id] - Delete user
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: { fid: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     await connectDB();
 
-    const user = await User.findOneAndDelete({ id: params.fid });
+    const user = await User.findOneAndDelete({ id: params.id });
 
     if (!user) {
       return NextResponse.json(
