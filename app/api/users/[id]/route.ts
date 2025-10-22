@@ -4,12 +4,13 @@ import { User } from '@/models/User';
 
 // GET /api/users/[id] - Get user by id
 export async function GET(
-  _request: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
-    const user = await User.findOne({ id: params.id });
+    const { id } = await params;
+    const user = await User.findOne({ id });
 
     if (!user) {
       return NextResponse.json(
@@ -31,14 +32,15 @@ export async function GET(
 // PUT /api/users/[id] - Update user
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const { id } = await params;
     const body = await request.json();
 
     const user = await User.findOneAndUpdate(
-      { id: params.id },
+      { id },
       body,
       { new: true, runValidators: true }
     );
@@ -62,13 +64,14 @@ export async function PUT(
 
 // DELETE /api/users/[id] - Delete user
 export async function DELETE(
-  _request: NextRequest,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
+    const { id } = await params;
 
-    const user = await User.findOneAndDelete({ id: params.id });
+    const user = await User.findOneAndDelete({ id });
 
     if (!user) {
       return NextResponse.json(

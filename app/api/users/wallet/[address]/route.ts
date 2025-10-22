@@ -4,12 +4,13 @@ import { User } from '@/models/User';
 
 // GET /api/users/wallet/[address] - Get user by wallet address
 export async function GET(
-  _request: NextRequest,
-  { params }: { params: { address: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ address: string }> }
 ) {
   try {
     await connectDB();
-    const user = await User.findOne({ walletAddress: params.address });
+    const { address } = await params;
+    const user = await User.findOne({ walletAddress: address });
 
     if (!user) {
       return NextResponse.json(
