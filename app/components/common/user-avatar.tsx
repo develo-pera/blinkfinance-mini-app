@@ -12,22 +12,22 @@ const UserAvatar = ({ user, address, onClick, children }: { user?: Context.UserC
   if (user && user?.pfpUrl) {
     return (
       <div onClick={onClick}>
-        <img className="w-8 h-8 rounded-full" src={user.pfpUrl} alt="use profile phot" />
+        <img className="w-7 h-7 rounded-full" src={user.pfpUrl} alt="use profile phot" />
       </div>
     )
   }
 
   if (isNameLoading || isAvatarLoading) {
-    return <Loader className="w-8 h-8 rounded-full" />;
+    return <Loader className="w-6 h-6 rounded-full" />;
   }
 
   if (avatar) {
-    return <img className="w-8 h-8 rounded-full" src={avatar} alt="use profile phot" />;
+    return <img className="w-7 h-7 rounded-full" src={avatar} alt="use profile phot" />;
   }
 
   return (
     <div onClick={onClick}>
-      {children || <ScanFace className="w-8 h-8 text-foreground stroke-[1.5px] opacity-70" />}
+      {children || <ScanFace className="w-6 h-6 text-foreground stroke-[1.5px] opacity-70" />}
     </div>
   )
 };

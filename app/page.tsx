@@ -9,6 +9,7 @@ import { useMiniKit } from "@coinbase/onchainkit/minikit";
 import { Connected } from "@coinbase/onchainkit";
 import { config } from "@/app.config";
 import CONSTANTS from "@/lib/consts";
+import useFetchUser from "./hooks/useFetchUser";
 import LoadingAppScreen from "./components/loading-app-screen";
 import LaunchMiniAppScreen from "./components/launch-mini-app-screen";
 import useIsMiniApp from "./hooks/useIsMiniApp";
@@ -19,8 +20,10 @@ import HomePage from "./components/pages/home";
 import UploadPage from "./components/pages/upload";
 import WalletPage from "./components/pages/wallet";
 import ProfilePage from "./components/pages/profile";
+import CompleteProfilePage from "./components/pages/complete-profile";
+import EditProfilePage from "./components/pages/edit-profile";
 
-export type ActivePage = "home" | "upload" | "wallet" | "profile";
+export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile";
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -36,9 +39,12 @@ export default function Home() {
   const { isInMiniApp, isLoading: isInMiniAppLoading } = useIsMiniApp();
   const { context, setMiniAppReady, isMiniAppReady } = useMiniKit();
   const { address } = useAccount();
+  const { data: userData, isLoading: isFetchingUser, error: _fetchUserError, refetch: refetchUser } = useFetchUser(address);
   const [activePage, setActivePage] = useState<ActivePage>("home");
+  const [loadingState, setLoadingState] = useState<boolean>(false);
 
   console.log("context", context);
+  console.log("userData", userData);
   // console.log("data", data);
   // console.log("error", error);
 
@@ -68,7 +74,7 @@ export default function Home() {
     }
   }, [setMiniAppReady, isMiniAppReady]);
 
-  if (isInMiniAppLoading || !isMiniAppReady) {
+  if (isInMiniAppLoading || !isMiniAppReady || isFetchingUser) {
     return <LoadingAppScreen />;
   }
 
@@ -84,22 +90,33 @@ export default function Home() {
   return (
     <div>
       <Connected
+        connecting={
+          <LoadingAppScreen />
+        }
         fallback={
           <div className="h-screen flex flex-col items-center justify-center">
             <Image className="rounded-sm" src="/miniapp-logo.jpg" alt="Mini App Logo" width={60} height={60} priority />
             <p className="mt-10 mb-5 text-sm text-center max-w-[250px]">Please connect your wallet to continue using Blink Finance Mini App</p>
             {/* TODO: this doesn't work for Farcaster. Try with custom connect wallet button. */}
-            <ConnectWallet onConnect={() => console.log("connected BREE!")} className="!bg-primary !text-primary-foreground hover:!bg-primary/90" />
+            <ConnectWallet className="!bg-primary !text-primary-foreground hover:!bg-primary/90" />
           </div>
         }
       >
         <div className="min-h-screen flex flex-col">
-          <Header />
+          <Header loadingState={loadingState} />
           <div className="flex flex-1 pb-[90px]">
             {activePage === "home" && <HomePage />}
             {activePage === "upload" && <UploadPage />}
             {activePage === "wallet" && <WalletPage />}
-            {activePage === "profile" && <ProfilePage user={context?.user} address={address} />}
+            {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} setActivePage={setActivePage} />}
+            {
+              activePage === "complete-profile" &&
+              <CompleteProfilePage user={context?.user} address={address} setLoadingState={setLoadingState} refetchUser={refetchUser} setActivePage={setActivePage} />
+            }
+            {
+              activePage === "edit-profile" &&
+              <EditProfilePage userData={userData} setLoadingState={setLoadingState} refetchUser={refetchUser} setActivePage={setActivePage} />
+            }
           </div>
           {/* TODO: Remove mx-auto max-w-screen-md after demo is disabled. App will be available only as Mini App. */}
           <NavigationBottomBar setActivePage={setActivePage} activePage={activePage} className="mx-auto max-w-screen-sm" user={context?.user} address={address} />

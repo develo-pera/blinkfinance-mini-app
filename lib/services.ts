@@ -1,5 +1,5 @@
-import connectDB from '@/lib/mongodb';
-import { User } from '@/models/User';
+import connectDB from "@/lib/mongodb";
+import { User } from "@/models/User";
 
 // User operations
 export const userService = {
@@ -36,7 +36,15 @@ export const userService = {
 
   async getUserByWalletAddress(walletAddress: string) {
     await connectDB();
-    return await User.findOne({ walletAddress });
+
+    try {
+      const user = await User.findOne({ walletAddress });
+      console.log(user);
+      return user;
+    } catch (e) {
+      console.log(e);
+    }
+
   },
 
   async getUserByEmail(email: string) {

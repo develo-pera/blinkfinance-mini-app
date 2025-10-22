@@ -5,13 +5,15 @@ import { Context } from "@farcaster/miniapp-sdk";
 import Image from "next/image";
 import { Building2, LogOut, Pencil } from "lucide-react";
 import { useDisconnect } from "wagmi";
-import { Address } from "viem";
+import { Address, Chain } from "viem";
 import { useName } from "@coinbase/onchainkit/identity";
 import { base, mainnet } from "wagmi/chains";
-import { Chain } from "viem";
-import { truncateAddress } from "@/lib/utils";
+import { cn, truncateAddress } from "@/lib/utils";
+import { IUser } from "@/models/User";
+import { ActivePage } from "@/app/page";
 
-const ProfilePage = ({ user, address }: { user?: Context.UserContext, address?: Address }) => {
+
+const ProfilePage = ({ userData, user, address, setActivePage }: { userData?: IUser, user?: Context.UserContext, address?: Address, setActivePage: (page: ActivePage) => void }) => {
   const { disconnect } = useDisconnect();
   const { data: ensName, isLoading: isEnsNameLoading } = useName({ address: address as `0x${string}`, chain: mainnet as Chain });
   const { data: baseEnsName, isLoading: isBaseEnsNameLoading } = useName({ address: address as `0x${string}`, chain: base as Chain });
@@ -23,16 +25,21 @@ const ProfilePage = ({ user, address }: { user?: Context.UserContext, address?: 
   console.log("isEnsNameLoading", isEnsNameLoading);
   console.log("isBaseEnsNameLoading", isBaseEnsNameLoading);
 
+  // TODO: add user name from userData
+  const userName = userData?.displayName || user?.displayName;
+  const profileCompleted = userName && userData?.email;
+
   return (
     <div className="px-4 flex flex-col flex-1">
       <div className="mt-5 px-4">
         {/* TODO */}
-        <h1 className="text-2xl font-bold">{user?.displayName || "Developera"}</h1>
+        <h1 className={cn("text-2xl font-bold", userName ? "text-foreground" : "text-gray-500 opacity-50")}>{userName || "Name not set"}</h1>
         <p>{displayDomain || truncateAddress(address as Address)}</p>
 
-        <p className="text-sm text-gray-500">petar@ethbelgrade.rs</p>
+        <p className={cn("text-sm", userData?.email ? "text-foreground" : "text-gray-500 opacity-50")}>{userData?.email || "Email not set"}</p>
       </div>
 
+      {/* // TODO: check if userData has company data and show it */}
       <div className="my-10 p-4 bg-[var(--bf-card-background)] rounded-2xl">
         <h2 className="text-3xl">Your Company</h2>
         <div className="mt-5 bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] rounded-xl p-4 relative overflow-hidden">
@@ -51,15 +58,21 @@ const ProfilePage = ({ user, address }: { user?: Context.UserContext, address?: 
         </div>
       </div>
 
-      <div className="mt-auto grid grid-cols-2 gap-5">
-        <Button onClick={() => console.log("Edit profile")} className=" w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
-          <Pencil className="w-4h-4" /> Edit profile
-        </Button>
+      {
+        profileCompleted ? (<div className="mt-auto grid grid-cols-2 gap-5">
+          <Button onClick={() => setActivePage("edit-profile")} className=" w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
+            <Pencil className="w-4h-4" /> Edit profile
+          </Button>
 
-        <Button onClick={() => console.log("Edit company")} className="w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
-          <Building2 className="w-4h-4" /> Edit Company
-        </Button>
-      </div>
+          <Button onClick={() => console.log("Edit company")} className="w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
+            <Building2 className="w-4h-4" /> Edit Company
+          </Button>
+        </div>
+        ) : (
+          <Button onClick={() => setActivePage("complete-profile")} className="mt-auto w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
+            <Pencil className="w-4h-4" /> Complete profile
+          </Button>
+        )}
 
       <Button onClick={() => disconnect()} className="mt-5 w-full rounded-xl">
         <LogOut className="w-4h-4" /> Log out

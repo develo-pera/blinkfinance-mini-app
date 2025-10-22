@@ -102,7 +102,7 @@ const user = await fetch('/api/users/12345');
 
 ### 6. Testing Database Connection
 
-Visit `http://localhost:3001/api/test-db` to test your database connection.
+Visit `http://localhost:3000/api/test-db` to test your database connection.
 
 ### 7. Development Tips
 

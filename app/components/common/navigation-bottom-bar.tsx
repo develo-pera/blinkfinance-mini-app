@@ -68,18 +68,21 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
   const handlePageClick = (page: ActivePage) => {
     setActivePage(page);
   };
+
+  const showAnimatedIndicator = activePage === "home" || activePage === "upload" || activePage === "wallet" || activePage === "profile";
+
   return (
     <div className={cn("px-4 py-4 fixed bottom-0 left-0 right-0 z-50", className)}>
       <div ref={containerRef} className="relative flex items-center justify-between gap-10 p-4 py-3 dark:bg-[#131313] bg-[#f5f5f5] rounded-xl">
         {/* Animated indicator */}
-        <div
+        {showAnimatedIndicator && <div
           ref={indicatorRef}
           className="absolute w-10 h-10 bg-[var(--bf-purple)] rounded-xl pointer-events-none transition-all duration-300 ease-out"
           style={{
             transform: "translate(-50%, -50%)",
             zIndex: 1
           }}
-        />
+        />}
 
         <div
           ref={homeRef}

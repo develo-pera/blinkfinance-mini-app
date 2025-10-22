@@ -17,8 +17,6 @@ export interface IUser extends Document {
 const UserSchema = new Schema<IUser>({
   fid: {
     type: String,
-    unique: true,
-    index: true
   },
   username: {
     type: String,
@@ -50,6 +48,11 @@ const UserSchema = new Schema<IUser>({
 });
 
 UserSchema.plugin(toJSON);
+
+UserSchema.index(
+  { fid: 1 },
+  { unique: true, partialFilterExpression: { fid: { $exists: true, $ne: null } } }
+);
 
 // Export User model
 export const User = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);

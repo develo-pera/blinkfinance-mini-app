@@ -4,6 +4,7 @@ import { base } from "wagmi/chains";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
 import "@coinbase/onchainkit/styles.css";
 import TanstackQueryProvider from "./components/providers/tanstack-query-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 export function RootProvider({ children }: { children: ReactNode }) {
   return (
@@ -30,6 +31,7 @@ export function RootProvider({ children }: { children: ReactNode }) {
     >
       <TanstackQueryProvider>
         {children}
+        <Toaster />
       </TanstackQueryProvider>
     </OnchainKitProvider>
   );

@@ -40,7 +40,7 @@ export async function PUT(
     const body = await request.json();
 
     const user = await User.findOneAndUpdate(
-      { id },
+      { _id: id },
       body,
       { new: true, runValidators: true }
     );
