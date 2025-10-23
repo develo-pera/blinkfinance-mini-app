@@ -1,20 +1,32 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { Company } from "@/models/Company";
 import { User } from "@/models/User";
+import { withAuth } from "@/lib/middleware";
 
-// GET /api/user/[id]/company - Get user's company
-export async function GET(
+// GET /api/user/[id]/company - Get user's company (protected)
+export const GET = withAuth(async (
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  { params }: { params: Promise<{ id: string }> },
+  user: any
+) => {
   try {
     await connectDB();
     const { id } = await params;
 
+    // Check if user is trying to access their own company
+    if (user._id.toString() !== id) {
+      return NextResponse.json(
+        { success: false, error: "Access denied. You can only access your own company." },
+        { status: 403 }
+      );
+    }
+
     // First check if user exists
-    const user = await User.findById(id);
-    if (!user) {
+    const userData = await User.findById(id);
+    if (!userData) {
       return NextResponse.json(
         { success: false, error: "User not found" },
         { status: 404 }
@@ -40,17 +52,26 @@ export async function GET(
       { status: 500 }
     );
   }
-}
+});
 
-// POST /api/user/[id]/company - Create user's company
-export async function POST(
+// POST /api/user/[id]/company - Create user's company (protected)
+export const POST = withAuth(async (
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  { params }: { params: Promise<{ id: string }> },
+  user: any
+) => {
   try {
     await connectDB();
     const { id } = await params;
     const body = await request.json();
+
+    // Check if user is trying to create their own company
+    if (user._id.toString() !== id) {
+      return NextResponse.json(
+        { success: false, error: "Access denied. You can only create your own company." },
+        { status: 403 }
+      );
+    }
 
     const { name, logo, address, taxId, registrationNumber } = body;
 
@@ -63,8 +84,8 @@ export async function POST(
     }
 
     // Check if user exists
-    const user = await User.findById(id);
-    if (!user) {
+    const userData = await User.findById(id);
+    if (!userData) {
       return NextResponse.json(
         { success: false, error: "User not found" },
         { status: 404 }
@@ -112,17 +133,26 @@ export async function POST(
       { status: 500 }
     );
   }
-}
+});
 
-// PUT /api/user/[id]/company - Update user's company
-export async function PUT(
+// PUT /api/user/[id]/company - Update user's company (protected)
+export const PUT = withAuth(async (
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  { params }: { params: Promise<{ id: string }> },
+  user: any
+) => {
   try {
     await connectDB();
     const { id } = await params;
     const body = await request.json();
+
+    // Check if user is trying to update their own company
+    if (user._id.toString() !== id) {
+      return NextResponse.json(
+        { success: false, error: "Access denied. You can only update your own company." },
+        { status: 403 }
+      );
+    }
 
     const { name, logo, address, taxId, registrationNumber } = body;
 
@@ -134,8 +164,8 @@ export async function PUT(
     }
 
     // Check if user exists
-    const user = await User.findById(id);
-    if (!user) {
+    const userData = await User.findById(id);
+    if (!userData) {
       return NextResponse.json(
         { success: false, error: "User not found" },
         { status: 404 }
@@ -147,7 +177,9 @@ export async function PUT(
       { ownerId: id },
       { name, logo, address, taxId, registrationNumber },
       { new: true, runValidators: true, upsert: true }
-    );
+    ).populate("owner", "fid username displayName email");
+
+    console.log("company", company);
 
     if (!company) {
       return NextResponse.json(
@@ -164,20 +196,29 @@ export async function PUT(
       { status: 500 }
     );
   }
-}
+});
 
-// DELETE /api/user/[id]/company - Delete user's company
-export async function DELETE(
+// DELETE /api/user/[id]/company - Delete user's company (protected)
+export const DELETE = withAuth(async (
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+  { params }: { params: Promise<{ id: string }> },
+  user: any
+) => {
   try {
     await connectDB();
     const { id } = await params;
 
+    // Check if user is trying to delete their own company
+    if (user._id.toString() !== id) {
+      return NextResponse.json(
+        { success: false, error: "Access denied. You can only delete your own company." },
+        { status: 403 }
+      );
+    }
+
     // Check if user exists
-    const user = await User.findById(id);
-    if (!user) {
+    const userData = await User.findById(id);
+    if (!userData) {
       return NextResponse.json(
         { success: false, error: "User not found" },
         { status: 404 }
@@ -209,4 +250,4 @@ export async function DELETE(
       { status: 500 }
     );
   }
-}
+});

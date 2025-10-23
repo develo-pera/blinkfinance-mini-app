@@ -119,14 +119,14 @@ export default function Home() {
           <Header className={applyClassOnHeader(activePage)} loadingState={loadingState} />
           <div className="flex flex-1 pb-[90px]">
             {/* TODO: add financial data here from the smart contract. */}
-            {activePage === "home" && <HomePage userData={userData} financialData={undefined} setActivePage={setActivePage} />}
+            {activePage === "home" && <HomePage userData={userData} financialData={undefined} setActivePage={setActivePage} refetchUser={refetchUser} />}
             {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage activePage={activePage} setActivePage={setActivePage} />}
             {activePage === "upload" && <UploadPage />}
             {activePage === "wallet" && <WalletPage />}
             {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} company={companyData} setActivePage={setActivePage} />}
             {
               activePage === "complete-profile" &&
-              <CompleteProfilePage user={context?.user} address={address} setLoadingState={setLoadingState} refetchUser={refetchUser} setActivePage={setActivePage} />
+              <CompleteProfilePage user={context?.user} userData={userData} address={address} setLoadingState={setLoadingState} refetchUser={refetchUser} setActivePage={setActivePage} />
             }
             {
               activePage === "edit-profile" &&

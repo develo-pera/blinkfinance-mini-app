@@ -50,7 +50,6 @@ const CompanySchema = new Schema<ICompany>({
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
-    unique: true,
   },
 }, {
   timestamps: true,

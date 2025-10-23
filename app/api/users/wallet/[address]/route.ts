@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import { User } from '@/models/User';
+import { withAuth } from '@/lib/middleware';
 
 // GET /api/users/wallet/[address] - Get user by wallet address
-export async function GET(
-  request: NextRequest,
+export const GET = withAuth(async (
+  _request: NextRequest,
   { params }: { params: Promise<{ address: string }> }
-) {
+) => {
   try {
     await connectDB();
     const { address } = await params;
@@ -27,4 +28,4 @@ export async function GET(
       { status: 500 }
     );
   }
-}
+});

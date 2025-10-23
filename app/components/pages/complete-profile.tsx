@@ -8,6 +8,7 @@ import { Address } from "viem";
 import { toast } from "sonner";
 import * as yup from "yup";
 import { ActivePage } from "@/app/page";
+import { IUser } from "@/models/User";
 
 // Validation schema
 const profileSchema = yup.object({
@@ -22,11 +23,11 @@ const profileSchema = yup.object({
     .email("Please enter a valid email address"),
 });
 
-const CompleteProfilePage = ({ user, address, setLoadingState, refetchUser, setActivePage }: { user?: Context.UserContext, address?: Address, setLoadingState: (loadingState: boolean) => void, refetchUser: () => void, setActivePage: (page: ActivePage) => void }) => {
+const CompleteProfilePage = ({ user, userData, address, setLoadingState, refetchUser, setActivePage }: { user?: Context.UserContext, userData?: IUser, address?: Address, setLoadingState: (loadingState: boolean) => void, refetchUser: () => void, setActivePage: (page: ActivePage) => void }) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
-    displayName: user?.displayName || "",
+    displayName: userData?.displayName || "",
     email: "",
   });
   const formRef = useRef<HTMLFormElement>(null);
@@ -72,14 +73,15 @@ const CompleteProfilePage = ({ user, address, setLoadingState, refetchUser, setA
       await profileSchema.validate(formData, { abortEarly: false });
 
       // If validation passes, submit the form
-      const response = await fetch("/api/users", {
-        method: "POST",
+      const response = await fetch(`/api/users/${userData?.id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("bf-token")}`,
         },
         body: JSON.stringify({
           ...formData,
-          fid: user?.fid || undefined,
+          fid: userData?.fid || user?.fid,
           walletAddress: address,
         }),
       });

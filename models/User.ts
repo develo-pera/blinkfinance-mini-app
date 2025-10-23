@@ -3,6 +3,7 @@ import toJSON from "./plugins/toJSON";
 
 // User Schema
 export interface IUser extends Document {
+  _id: mongoose.Types.ObjectId;
   fid: string;
   username?: string;
   displayName?: string;

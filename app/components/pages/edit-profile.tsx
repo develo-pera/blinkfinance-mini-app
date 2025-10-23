@@ -75,6 +75,7 @@ const EditProfilePage = ({ userData, setLoadingState, refetchUser, setActivePage
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("bf-token")}`,
         },
         body: JSON.stringify({
           ...formData,
