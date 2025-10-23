@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Context } from "@farcaster/miniapp-sdk";
-import Image from "next/image";
 import { Building2, LogOut, Pencil } from "lucide-react";
 import { useDisconnect } from "wagmi";
 import { Address, Chain } from "viem";
@@ -26,7 +25,6 @@ const ProfilePage = ({ userData, user, address, company, setActivePage }: { user
 
   console.log("isEnsNameLoading", isEnsNameLoading);
   console.log("isBaseEnsNameLoading", isBaseEnsNameLoading);
-  console.log("company", company);
 
   // TODO: add user name from userData
   const userName = userData?.displayName || user?.displayName;
@@ -35,7 +33,6 @@ const ProfilePage = ({ userData, user, address, company, setActivePage }: { user
   return (
     <div className="px-4 flex flex-col flex-1">
       <div className="mt-5 px-4">
-        {/* TODO */}
         <h1 className={cn("text-2xl font-bold", userName ? "text-foreground" : "text-gray-500 opacity-50")}>{userName || "Name not set"}</h1>
         <p>{displayDomain || truncateAddress(address as Address)}</p>
 
