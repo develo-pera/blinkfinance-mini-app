@@ -5,8 +5,9 @@ import { useAccount, useSignTypedData } from "wagmi";
 import { generateSiweNonce } from "viem/siwe";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
-const SignInButton = ({ refetchUser }: { refetchUser: () => void }) => {
+const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, className?: string }) => {
   const { address } = useAccount();
   const { signTypedData } = useSignTypedData();
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -23,6 +24,7 @@ const SignInButton = ({ refetchUser }: { refetchUser: () => void }) => {
   const handleSignIn = async () => {
     setIsSigningIn(true);
 
+    // TODO: Change to SIWE
     signTypedData({
       types: {
         EIP712Domain: [],
@@ -63,7 +65,7 @@ const SignInButton = ({ refetchUser }: { refetchUser: () => void }) => {
 
   return (
     <>
-      <Button onClick={handleSignIn} disabled={isSigningIn} className={"mt-2 w-full rounded-xl bg-[var(--bf-card-background)] text-foreground"}>
+      <Button onClick={handleSignIn} disabled={isSigningIn} className={cn("mt-2 w-full rounded-xl bg-[var(--bf-card-background)] text-foreground", className)}>
         {isSigningIn ? "Signing in..." : "Please sign in to use the app"}
       </Button>
     </>

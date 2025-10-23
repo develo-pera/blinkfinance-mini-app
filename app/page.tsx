@@ -61,6 +61,8 @@ export default function Home() {
   // console.log("data", data);
   // console.log("error", error);
 
+  const isAuthenticated = !!localStorage.getItem("bf-token");
+
   useEffect(() => {
     const allowDemo = localStorage.getItem(CONSTANTS.localStorageKeys.BFAllowDemo);
     if (allowDemo === "true") {
@@ -103,9 +105,9 @@ export default function Home() {
   return (
     <div>
       <Connected
-        connecting={
-          <LoadingAppScreen />
-        }
+        // connecting={
+        //   <LoadingAppScreen />
+        // }
         fallback={
           <div className="h-screen flex flex-col items-center justify-center">
             <Image className="rounded-sm" src="/miniapp-logo.jpg" alt="Mini App Logo" width={60} height={60} priority />
@@ -119,11 +121,11 @@ export default function Home() {
           <Header className={applyClassOnHeader(activePage)} loadingState={loadingState} />
           <div className="flex flex-1 pb-[90px]">
             {/* TODO: add financial data here from the smart contract. */}
-            {activePage === "home" && <HomePage userData={userData} financialData={undefined} setActivePage={setActivePage} refetchUser={refetchUser} />}
+            {activePage === "home" && <HomePage userData={userData} financialData={undefined} setActivePage={setActivePage} refetchUser={refetchUser} isAuthenticated={isAuthenticated} />}
             {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage activePage={activePage} setActivePage={setActivePage} />}
             {activePage === "upload" && <UploadPage />}
             {activePage === "wallet" && <WalletPage />}
-            {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} company={companyData} setActivePage={setActivePage} />}
+            {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} company={companyData} setActivePage={setActivePage} isAuthenticated={isAuthenticated} refetchUser={refetchUser} />}
             {
               activePage === "complete-profile" &&
               <CompleteProfilePage user={context?.user} userData={userData} address={address} setLoadingState={setLoadingState} refetchUser={refetchUser} setActivePage={setActivePage} />

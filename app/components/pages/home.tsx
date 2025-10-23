@@ -10,12 +10,14 @@ const HomePage = ({
   userData,
   financialData,
   setActivePage,
-  refetchUser
+  refetchUser,
+  isAuthenticated
 }: {
   userData?: IUser,
   financialData?: { totalAmount: number, totalRepaid: number, totalBorrowed: number },
   setActivePage: (page: ActivePage) => void,
   refetchUser: () => void
+  isAuthenticated: boolean
 }
 ) => {
   return (
@@ -24,7 +26,7 @@ const HomePage = ({
         <div className="px-4 pt-5 pb-7">
           <AccountStatusCard name={userData?.displayName || ""} financialData={financialData} />
           {
-            userData?.walletAddress ? (
+            isAuthenticated ? (
               <div className="mt-2 grid grid-cols-2 gap-2">
                 <Button onClick={() => setActivePage("borrow")} className={"w-full rounded-xl bg-[var(--bf-card-background)] text-foreground"}>
                   Borrow

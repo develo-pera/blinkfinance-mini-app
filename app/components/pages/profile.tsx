@@ -12,9 +12,47 @@ import { IUser } from "@/models/User";
 import { ICompany } from "@/models/Company";
 import { ActivePage } from "@/app/page";
 import CompanyCard from "../common/company-card";
+import SignInButton from "../common/sign-in-button";
 
+// Move to separate file.
+const ProfilePageEditButtons = ({ profileCompleted, setActivePage, company }: { profileCompleted: string, setActivePage: (page: ActivePage) => void, company: ICompany }) => {
+  if (profileCompleted) {
+    return (
+      <div className="mt-auto grid grid-cols-2 gap-5">
+        <Button onClick={() => setActivePage("edit-profile")} className=" w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
+          <Pencil className="w-4h-4" /> Edit profile
+        </Button>
 
-const ProfilePage = ({ userData, user, address, company, setActivePage }: { userData?: IUser, user?: Context.UserContext, address?: Address, company?: ICompany, setActivePage: (page: ActivePage) => void }) => {
+        <Button onClick={() => setActivePage("edit-company")} className="w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
+          <Building2 className="w-4h-4" /> {company ? "Edit" : "Create"} Company
+        </Button>
+      </div>
+    )
+  }
+
+  return (
+    <Button onClick={() => setActivePage("complete-profile")} className="mt-auto w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
+      <Pencil className="w-4h-4" /> Complete profile
+    </Button>
+  )
+}
+
+const ProfilePage = ({
+  userData,
+  user,
+  address,
+  company,
+  setActivePage,
+  isAuthenticated,
+  refetchUser
+}: {
+  userData?: IUser,
+  user?: Context.UserContext,
+  address?: Address,
+  company?: ICompany,
+  setActivePage: (page: ActivePage) => void,
+  isAuthenticated: boolean, refetchUser: () => void
+}) => {
   const { disconnect } = useDisconnect();
   const { data: ensName, isLoading: isEnsNameLoading } = useName({ address: address as `0x${string}`, chain: mainnet as Chain });
   const { data: baseEnsName, isLoading: isBaseEnsNameLoading } = useName({ address: address as `0x${string}`, chain: base as Chain });
@@ -29,6 +67,12 @@ const ProfilePage = ({ userData, user, address, company, setActivePage }: { user
   // TODO: add user name from userData
   const userName = userData?.displayName || user?.displayName;
   const profileCompleted = userName && userData?.email;
+
+  const onLogout = () => {
+    localStorage.removeItem("bf-token");
+    disconnect();
+    setActivePage("home");
+  };
 
   return (
     <div className="px-4 flex flex-col flex-1">
@@ -47,33 +91,26 @@ const ProfilePage = ({ userData, user, address, company, setActivePage }: { user
             : (
               <div className="mt-5 bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] rounded-xl p-4 relative overflow-hidden">
                 <div className="relative z-1">
-                  <p className="opacity-80">No company found. Please create one to start using Blink Finance.</p>
+                  <p className="opacity-80">No company found. {isAuthenticated ? "Please create one to start using Blink Finance" : "Please sign in to create one"}.</p>
                 </div>
               </div>
             )
         }
       </div>
+      {
+        !isAuthenticated && (
+          <SignInButton refetchUser={refetchUser} className="mt-auto" />
+        )
+      }
 
       {
-        profileCompleted ? (<div className="mt-auto grid grid-cols-2 gap-5">
-          <Button onClick={() => setActivePage("edit-profile")} className=" w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
-            <Pencil className="w-4h-4" /> Edit profile
-          </Button>
+        isAuthenticated && <ProfilePageEditButtons profileCompleted={profileCompleted!} setActivePage={setActivePage} company={company!} />
+      }
 
-          <Button onClick={() => setActivePage("edit-company")} className="w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
-            <Building2 className="w-4h-4" /> {company ? "Edit" : "Create"} Company
-          </Button>
-        </div>
-        ) : (
-          <Button onClick={() => setActivePage("complete-profile")} className="mt-auto w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
-            <Pencil className="w-4h-4" /> Complete profile
-          </Button>
-        )}
-
-      <Button onClick={() => disconnect()} className="mt-5 w-full rounded-xl">
+      <Button onClick={onLogout} className="mt-5 w-full rounded-xl">
         <LogOut className="w-4h-4" /> Log out
       </Button>
-    </div>
+    </div >
   );
 };
 
