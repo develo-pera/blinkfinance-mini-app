@@ -24,8 +24,24 @@ import ProfilePage from "./components/pages/profile";
 import CompleteProfilePage from "./components/pages/complete-profile";
 import EditProfilePage from "./components/pages/edit-profile";
 import EditCompanyPage from "./components/pages/edit-company";
+import BorrowRepayPage from "./components/pages/borrow-repay";
 
-export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile" | "edit-company";
+export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile" | "edit-company" | "borrow" | "repay";
+
+const applyClassOnHeader = (activePage: ActivePage) => {
+  switch (activePage) {
+    case "home":
+      return "bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)]";
+    default:
+      return "";
+  }
+}
+
+const financialData = {
+  totalAmount: 10000,
+  totalRepaid: 2500,
+  totalBorrowed: 4000,
+};
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -106,9 +122,10 @@ export default function Home() {
         }
       >
         <div className="min-h-screen flex flex-col">
-          <Header loadingState={loadingState} />
+          <Header className={applyClassOnHeader(activePage)} loadingState={loadingState} />
           <div className="flex flex-1 pb-[90px]">
-            {activePage === "home" && <HomePage />}
+            {activePage === "home" && <HomePage userData={userData} financialData={financialData} setActivePage={setActivePage} />}
+            {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage activePage={activePage} setActivePage={setActivePage} />}
             {activePage === "upload" && <UploadPage />}
             {activePage === "wallet" && <WalletPage />}
             {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} company={companyData} setActivePage={setActivePage} />}

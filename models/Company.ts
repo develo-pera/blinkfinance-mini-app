@@ -51,7 +51,6 @@ const CompanySchema = new Schema<ICompany>({
     ref: "User",
     required: true,
     unique: true,
-    index: true
   },
 }, {
   timestamps: true,
