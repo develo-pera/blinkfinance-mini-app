@@ -10,6 +10,7 @@ import { Connected } from "@coinbase/onchainkit";
 import { config } from "@/app.config";
 import CONSTANTS from "@/lib/consts";
 import useFetchUser from "./hooks/useFetchUser";
+import useFetchCompany from "./hooks/useFetchCompany";
 import LoadingAppScreen from "./components/loading-app-screen";
 import LaunchMiniAppScreen from "./components/launch-mini-app-screen";
 import useIsMiniApp from "./hooks/useIsMiniApp";
@@ -22,8 +23,9 @@ import WalletPage from "./components/pages/wallet";
 import ProfilePage from "./components/pages/profile";
 import CompleteProfilePage from "./components/pages/complete-profile";
 import EditProfilePage from "./components/pages/edit-profile";
+import EditCompanyPage from "./components/pages/edit-company";
 
-export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile";
+export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile" | "edit-company";
 
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
@@ -40,6 +42,7 @@ export default function Home() {
   const { context, setMiniAppReady, isMiniAppReady } = useMiniKit();
   const { address } = useAccount();
   const { data: userData, isLoading: isFetchingUser, error: _fetchUserError, refetch: refetchUser } = useFetchUser(address);
+  const { data: companyData, isLoading: isFetchingCompany, error: _fetchCompanyError, refetch: refetchCompany } = useFetchCompany(userData?.id);
   const [activePage, setActivePage] = useState<ActivePage>("home");
   const [loadingState, setLoadingState] = useState<boolean>(false);
 
@@ -74,7 +77,7 @@ export default function Home() {
     }
   }, [setMiniAppReady, isMiniAppReady]);
 
-  if (isInMiniAppLoading || !isMiniAppReady || isFetchingUser) {
+  if (isInMiniAppLoading || !isMiniAppReady || isFetchingUser || isFetchingCompany) {
     return <LoadingAppScreen />;
   }
 
@@ -108,7 +111,7 @@ export default function Home() {
             {activePage === "home" && <HomePage />}
             {activePage === "upload" && <UploadPage />}
             {activePage === "wallet" && <WalletPage />}
-            {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} setActivePage={setActivePage} />}
+            {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} company={companyData} setActivePage={setActivePage} />}
             {
               activePage === "complete-profile" &&
               <CompleteProfilePage user={context?.user} address={address} setLoadingState={setLoadingState} refetchUser={refetchUser} setActivePage={setActivePage} />
@@ -117,9 +120,13 @@ export default function Home() {
               activePage === "edit-profile" &&
               <EditProfilePage userData={userData} setLoadingState={setLoadingState} refetchUser={refetchUser} setActivePage={setActivePage} />
             }
+            {
+              activePage === "edit-company" &&
+              <EditCompanyPage userData={userData} companyData={companyData} setLoadingState={setLoadingState} refetchCompany={refetchCompany} setActivePage={setActivePage} />
+            }
           </div>
           {/* TODO: Remove mx-auto max-w-screen-md after demo is disabled. App will be available only as Mini App. */}
-          <NavigationBottomBar setActivePage={setActivePage} activePage={activePage} className="mx-auto max-w-screen-sm" user={context?.user} address={address} />
+          <NavigationBottomBar className="mx-auto max-w-screen-sm" setActivePage={setActivePage} activePage={activePage} user={context?.user} address={address} />
         </div>
       </Connected>
     </div>

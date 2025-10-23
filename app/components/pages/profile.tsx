@@ -10,10 +10,12 @@ import { useName } from "@coinbase/onchainkit/identity";
 import { base, mainnet } from "wagmi/chains";
 import { cn, truncateAddress } from "@/lib/utils";
 import { IUser } from "@/models/User";
+import { ICompany } from "@/models/Company";
 import { ActivePage } from "@/app/page";
+import CompanyCard from "../common/company-card";
 
 
-const ProfilePage = ({ userData, user, address, setActivePage }: { userData?: IUser, user?: Context.UserContext, address?: Address, setActivePage: (page: ActivePage) => void }) => {
+const ProfilePage = ({ userData, user, address, company, setActivePage }: { userData?: IUser, user?: Context.UserContext, address?: Address, company?: ICompany, setActivePage: (page: ActivePage) => void }) => {
   const { disconnect } = useDisconnect();
   const { data: ensName, isLoading: isEnsNameLoading } = useName({ address: address as `0x${string}`, chain: mainnet as Chain });
   const { data: baseEnsName, isLoading: isBaseEnsNameLoading } = useName({ address: address as `0x${string}`, chain: base as Chain });
@@ -24,6 +26,7 @@ const ProfilePage = ({ userData, user, address, setActivePage }: { userData?: IU
 
   console.log("isEnsNameLoading", isEnsNameLoading);
   console.log("isBaseEnsNameLoading", isBaseEnsNameLoading);
+  console.log("company", company);
 
   // TODO: add user name from userData
   const userName = userData?.displayName || user?.displayName;
@@ -42,20 +45,16 @@ const ProfilePage = ({ userData, user, address, setActivePage }: { userData?: IU
       {/* // TODO: check if userData has company data and show it */}
       <div className="my-10 p-4 bg-[var(--bf-card-background)] rounded-2xl">
         <h2 className="text-3xl">Your Company</h2>
-        <div className="mt-5 bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] rounded-xl p-4 relative overflow-hidden">
-          <div className="relative z-1">
-            <div className="flex items-start justify-between gap-5">
-              <p className="font-bold">Blockops doo</p>
-              <Image src="https://joobpool-production.s3.amazonaws.com/ETH%20Belgrade/eth-bdg.jpg" alt="company logo" width={50} height={50} className="rounded-sm" />
-            </div>
-            <div className="mt-15 text-sm">
-              <p>VAT: <span className="opacity-60">1234567890</span></p>
-              <p>Reg. No: <span className="opacity-60">1234567890</span></p>
-              <p>Address: <span className="opacity-60">123 Main St, Anytown, USA</span></p>
-            </div>
-          </div>
-          <div className="absolute bg-[url('/intaglio-vector.min.svg')] bottom-0 top-0 right-0 left-0 opacity-20" />
-        </div>
+        {
+          company ? <CompanyCard company={company} />
+            : (
+              <div className="mt-5 bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] rounded-xl p-4 relative overflow-hidden">
+                <div className="relative z-1">
+                  <p className="opacity-80">No company found. Please create one to start using Blink Finance.</p>
+                </div>
+              </div>
+            )
+        }
       </div>
 
       {
@@ -64,8 +63,8 @@ const ProfilePage = ({ userData, user, address, setActivePage }: { userData?: IU
             <Pencil className="w-4h-4" /> Edit profile
           </Button>
 
-          <Button onClick={() => console.log("Edit company")} className="w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
-            <Building2 className="w-4h-4" /> Edit Company
+          <Button onClick={() => setActivePage("edit-company")} className="w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">
+            <Building2 className="w-4h-4" /> {company ? "Edit" : "Create"} Company
           </Button>
         </div>
         ) : (

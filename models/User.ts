@@ -10,6 +10,7 @@ export interface IUser extends Document {
   bio?: string;
   email?: string;
   walletAddress?: string;
+  company?: mongoose.Types.ObjectId; // Reference to single company owned by user
   createdAt: Date;
   updatedAt: Date;
 }
@@ -41,6 +42,10 @@ const UserSchema = new Schema<IUser>({
     unique: true,
     sparse: true,
     index: true
+  },
+  company: {
+    type: Schema.Types.ObjectId,
+    ref: 'Company'
   }
 }, {
   timestamps: true,
