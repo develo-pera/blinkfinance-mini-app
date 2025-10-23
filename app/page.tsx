@@ -37,12 +37,6 @@ const applyClassOnHeader = (activePage: ActivePage) => {
   }
 }
 
-const financialData = {
-  totalAmount: 10000,
-  totalRepaid: 2500,
-  totalBorrowed: 4000,
-};
-
 export default function Home() {
   // If you need to verify the user's identity, you can use the useQuickAuth hook.
   // This hook will verify the user's signature and return the user's FID. You can update
@@ -124,7 +118,8 @@ export default function Home() {
         <div className="min-h-screen flex flex-col">
           <Header className={applyClassOnHeader(activePage)} loadingState={loadingState} />
           <div className="flex flex-1 pb-[90px]">
-            {activePage === "home" && <HomePage userData={userData} financialData={financialData} setActivePage={setActivePage} />}
+            {/* TODO: add financial data here from the smart contract. */}
+            {activePage === "home" && <HomePage userData={userData} financialData={undefined} setActivePage={setActivePage} />}
             {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage activePage={activePage} setActivePage={setActivePage} />}
             {activePage === "upload" && <UploadPage />}
             {activePage === "wallet" && <WalletPage />}

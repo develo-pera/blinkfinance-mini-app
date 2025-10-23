@@ -5,7 +5,7 @@ import AccountStatusCard from "../common/account-status-card";
 import { Button } from "@/components/ui/button";
 import { ActivePage } from "@/app/page";
 
-const HomePage = ({ userData, financialData, setActivePage }: { userData?: IUser, financialData: { totalAmount: number, totalRepaid: number, totalBorrowed: number }, setActivePage: (page: ActivePage) => void }) => {
+const HomePage = ({ userData, financialData, setActivePage }: { userData?: IUser, financialData?: { totalAmount: number, totalRepaid: number, totalBorrowed: number }, setActivePage: (page: ActivePage) => void }) => {
   return (
     <div className="flex flex-col flex-1">
       <div className="bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] mt-[-1px]">

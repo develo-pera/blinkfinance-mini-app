@@ -1,5 +1,5 @@
-const AccountStatusCard = ({ name, financialData }: { name: string, financialData: { totalAmount: number, totalRepaid: number, totalBorrowed: number } }) => {
-  const { totalAmount, totalRepaid, totalBorrowed } = financialData;
+const AccountStatusCard = ({ name, financialData }: { name: string, financialData?: { totalAmount: number, totalRepaid: number, totalBorrowed: number } }) => {
+  const { totalAmount, totalRepaid, totalBorrowed } = financialData || { totalAmount: 0, totalRepaid: 0, totalBorrowed: 0 };
 
   // Calculate percentages for the segmented bar
   const balance = totalAmount - totalRepaid - totalBorrowed;
@@ -34,7 +34,7 @@ const AccountStatusCard = ({ name, financialData }: { name: string, financialDat
         <div className="flex flex-wrap gap-2 mt-3 text-xs">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-blue-500 rounded"></div>
-            <span>Repaid: ${financialData.totalRepaid.toLocaleString()}</span>
+            <span>Repaid: ${totalRepaid.toLocaleString()}</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-green-500 rounded"></div>
@@ -50,11 +50,11 @@ const AccountStatusCard = ({ name, financialData }: { name: string, financialDat
         <div className="mt-5 grid grid-cols-2 gap-2 text-sm">
           <div>
             <p className="text-gray-500">Total Amount</p>
-            <p className="font-semibold">${financialData.totalAmount.toLocaleString()}</p>
+            <p className="font-semibold">${totalAmount.toLocaleString()}</p>
           </div>
           <div>
             <p className="text-gray-500">Total Repaid</p>
-            <p className="font-semibold text-blue-600">${financialData.totalRepaid.toLocaleString()}</p>
+            <p className="font-semibold text-blue-600">${totalRepaid.toLocaleString()}</p>
           </div>
           <div>
             <p className="text-gray-500">Outstanding</p>
