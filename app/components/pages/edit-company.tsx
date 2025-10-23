@@ -262,10 +262,11 @@ const EditCompanyPage = ({
             <p className="text-red-500 text-sm mt-1">{errors["address.zipCode"]}</p>
           )}
         </div>
-        <Button className="mt-5 w-full rounded-xl bg-[var(--bf-card-background)] text-foreground" disabled={isSubmitting}>
+        <Button className="mt-5 w-full rounded-xl bg-foreground text-background" disabled={isSubmitting}>
           {isSubmitting ? "Saving..." : "Save"}
         </Button>
       </form>
+      <Button onClick={() => setActivePage("profile")} className="mt-auto w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">Go back to profile</Button>
     </div>
   );
 };

@@ -150,10 +150,12 @@ const EditProfilePage = ({ userData, setLoadingState, refetchUser, setActivePage
           )}
         </div>
 
-        <Button className={"mt-5 w-full rounded-xl bg-[var(--bf-card-background)] text-foreground"} disabled={isSubmitting}>
+        <Button className={"my-5 w-full rounded-xl bg-foreground text-background"} disabled={isSubmitting}>
           {isSubmitting ? "Updating..." : "Submit Changes"}
         </Button>
       </form>
+      <Button onClick={() => setActivePage("profile")} className="mt-auto w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">Go back to profile</Button>
+
     </div>
   );
 };

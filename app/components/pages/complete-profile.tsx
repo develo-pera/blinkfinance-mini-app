@@ -162,10 +162,11 @@ const CompleteProfilePage = ({ user, address, setLoadingState, refetchUser, setA
         <Input type="text" placeholder="Company City" className="w-full" />
         <Input type="text" placeholder="Company Country" className="w-full" />
         <Input type="text" placeholder="Company Zip" className="w-full" /> */}
-        <Button className={"mt-5 w-full rounded-xl bg-[var(--bf-card-background)] text-foreground"} disabled={isSubmitting}>
+        <Button className={"my-5 w-full rounded-xl bg-foreground text-background"} disabled={isSubmitting}>
           {isSubmitting ? "Submitting..." : "Submit Profile"}
         </Button>
       </form>
+      <Button onClick={() => setActivePage("profile")} className="mt-auto w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">Go back to profile</Button>
     </div>
   );
 };
