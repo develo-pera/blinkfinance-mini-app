@@ -34,7 +34,19 @@ const fieldSchemas = {
   "address.zipCode": yup.string().max(20, "Zip code must be less than 20 characters").required("Zip code is required"),
 };
 
-const EditCompanyPage = ({ userData, companyData, setLoadingState, refetchCompany, setActivePage }: { userData: IUser, companyData: ICompany, setLoadingState: (loadingState: boolean) => void, refetchCompany: () => void, setActivePage: (page: ActivePage) => void }) => {
+const EditCompanyPage = ({
+  userData,
+  companyData,
+  setLoadingState,
+  refetchCompany,
+  setActivePage
+}: {
+  userData: IUser,
+  companyData: ICompany,
+  setLoadingState: (loadingState: boolean) => void,
+  refetchCompany: () => void,
+  setActivePage: (page: ActivePage) => void
+}) => {
   const [formData, setFormData] = useState({
     name: companyData?.name || "",
     taxId: companyData?.taxId || "",
@@ -152,52 +164,100 @@ const EditCompanyPage = ({ userData, companyData, setLoadingState, refetchCompan
       <div className="mt-5">
         <h1 className="text-2xl font-bold">Edit Company</h1>
       </div>
-      <form onSubmit={handleEditCompany} ref={formRef} className="mt-10 space-y-3">
+      <form onSubmit={handleEditCompany} ref={formRef} className="mt-10 space-y-2">
         {/* // TODO: Add logo input */}
         <div>
-          <Input type="text" placeholder="Company Name" className={`w-full ${errors.name ? 'border-red-500' : ''}`} value={formData.name} onChange={(e) => handleInputChange("name", e.target.value)} />
+          <Input
+            type="text"
+            placeholder="Company Name"
+            className={`w-full ${errors.name ? 'border-red-500' : ''}`}
+            value={formData.name}
+            onChange={(e) => handleInputChange("name", e.target.value)}
+          />
           {errors.name && (
             <p className="text-red-500 text-sm mt-1">{errors.name}</p>
           )}
         </div>
         <div>
-          <Input type="text" placeholder="Company VAT" className={`w-full ${errors.taxId ? 'border-red-500' : ''}`} value={formData.taxId} onChange={(e) => handleInputChange("taxId", e.target.value)} />
+          <Input
+            type="text"
+            placeholder="Company VAT"
+            className={`w-full ${errors.taxId ? 'border-red-500' : ''}`}
+            value={formData.taxId}
+            onChange={(e) => handleInputChange("taxId", e.target.value)}
+          />
           {errors.taxId && (
             <p className="text-red-500 text-sm mt-1">{errors.taxId}</p>
           )}
         </div>
         <div>
-          <Input type="text" placeholder="Company Reg. No" className={`w-full ${errors.registrationNumber ? 'border-red-500' : ''}`} value={formData.registrationNumber} onChange={(e) => handleInputChange("registrationNumber", e.target.value)} />
+          <Input
+            type="text"
+            placeholder="Company Reg. No"
+            className={`w-full ${errors.registrationNumber ? 'border-red-500' : ''}`}
+            value={formData.registrationNumber}
+            onChange={(e) => handleInputChange("registrationNumber", e.target.value)}
+          />
           {errors.registrationNumber && (
             <p className="text-red-500 text-sm mt-1">{errors.registrationNumber}</p>
           )}
         </div>
         <div>
-          <Input type="text" placeholder="Company Country" className={`w-full ${errors["address.country"] ? 'border-red-500' : ''}`} value={formData.address?.country} onChange={(e) => handleInputChange("address.country", e.target.value)} />
+          <Input
+            type="text"
+            placeholder="Company Country"
+            className={`w-full ${errors["address.country"] ? 'border-red-500' : ''}`}
+            value={formData.address?.country}
+            onChange={(e) => handleInputChange("address.country", e.target.value)}
+          />
           {errors["address.country"] && (
             <p className="text-red-500 text-sm mt-1">{errors["address.country"]}</p>
           )}
         </div>
         <div>
-          <Input type="text" placeholder="Company Address" className={`w-full ${errors["address.street"] ? 'border-red-500' : ''}`} value={formData.address?.street} onChange={(e) => handleInputChange("address.street", e.target.value)} />
+          <Input
+            type="text"
+            placeholder="Company Address"
+            className={`w-full ${errors["address.street"] ? 'border-red-500' : ''}`}
+            value={formData.address?.street}
+            onChange={(e) => handleInputChange("address.street", e.target.value)}
+          />
           {errors["address.street"] && (
             <p className="text-red-500 text-sm mt-1">{errors["address.street"]}</p>
           )}
         </div>
         <div>
-          <Input type="text" placeholder="Company City" className={`w-full ${errors["address.city"] ? 'border-red-500' : ''}`} value={formData.address?.city} onChange={(e) => handleInputChange("address.city", e.target.value)} />
+          <Input
+            type="text"
+            placeholder="Company City"
+            className={`w-full ${errors["address.city"] ? 'border-red-500' : ''}`}
+            value={formData.address?.city}
+            onChange={(e) => handleInputChange("address.city", e.target.value)}
+          />
           {errors["address.city"] && (
             <p className="text-red-500 text-sm mt-1">{errors["address.city"]}</p>
           )}
         </div>
         <div>
-          <Input type="text" placeholder="Company State" className={`w-full ${errors["address.state"] ? 'border-red-500' : ''}`} value={formData.address?.state} onChange={(e) => handleInputChange("address.state", e.target.value)} />
+          <Input
+            type="text"
+            placeholder="Company State"
+            className={`w-full ${errors["address.state"] ? 'border-red-500' : ''}`}
+            value={formData.address?.state}
+            onChange={(e) => handleInputChange("address.state", e.target.value)}
+          />
           {errors["address.state"] && (
             <p className="text-red-500 text-sm mt-1">{errors["address.state"]}</p>
           )}
         </div>
         <div>
-          <Input type="text" placeholder="Company Zip" className={`w-full ${errors["address.zipCode"] ? 'border-red-500' : ''}`} value={formData.address?.zipCode} onChange={(e) => handleInputChange("address.zipCode", e.target.value)} />
+          <Input
+            type="text"
+            placeholder="Company Zip"
+            className={`w-full ${errors["address.zipCode"] ? 'border-red-500' : ''}`}
+            value={formData.address?.zipCode}
+            onChange={(e) => handleInputChange("address.zipCode", e.target.value)}
+          />
           {errors["address.zipCode"] && (
             <p className="text-red-500 text-sm mt-1">{errors["address.zipCode"]}</p>
           )}

@@ -128,7 +128,7 @@ const CompleteProfilePage = ({ user, address, setLoadingState, refetchUser, setA
         <h1 className="text-2xl font-bold">Complete Profile</h1>
         <p className="mt-3 text-sm text-gray-500">Please complete your profile to start using Blink Finance.</p>
       </div>
-      <form onSubmit={handleCompleteProfile} ref={formRef} className="mt-10 space-y-3">
+      <form onSubmit={handleCompleteProfile} ref={formRef} className="mt-10 space-y-2">
         <div>
           <Input
             value={formData.displayName}

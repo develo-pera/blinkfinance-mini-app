@@ -123,7 +123,7 @@ const EditProfilePage = ({ userData, setLoadingState, refetchUser, setActivePage
       <div className="mt-5">
         <h1 className="text-2xl font-bold">Edit Profile</h1>
       </div>
-      <form onSubmit={handleCompleteProfile} ref={formRef} className="mt-10 space-y-3">
+      <form onSubmit={handleCompleteProfile} ref={formRef} className="mt-10 space-y-2">
         <div>
           <Input
             value={formData.displayName}
