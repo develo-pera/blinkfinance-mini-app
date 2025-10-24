@@ -8,6 +8,8 @@ import { Loader2 } from "lucide-react";
 import { InvoiceType } from "../common/invoice-card";
 import { ActivePage } from "@/app/page";
 import SignInButton from "../common/sign-in-button";
+import { FinancialData } from "@/app/page";
+
 // Interface for extracted invoice data
 interface ExtractedInvoiceData {
   id: number;
