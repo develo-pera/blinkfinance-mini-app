@@ -150,9 +150,15 @@ const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoad
 
   return (
     <div className="p-4 flex flex-col flex-1">
-      <div className="bg-[var(--bf-card-background)] rounded-xl p-4">
-        <h1 className="text-xl font-bold">Upload invoice</h1>
-        <p>{file?.name}</p>
+      <div className="">
+        <h1 className="mb-2">Upload invoice</h1>
+        {
+          file ? (
+            <p className="bg-[var(--bf-card-background)] rounded-xl p-4">{file?.name}</p>
+          ) : (
+            <p className="bg-[var(--bf-card-background)] rounded-xl p-4">No file selected</p>
+          )
+        }
       </div>
       <div className="mt-5">
         {/* Show extracted data if available, otherwise show mock invoice */}
@@ -174,7 +180,7 @@ const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoad
         <div className="grid grid-cols-2 gap-3 mt-5">
           <Button
             onClick={handleUpload}
-            className="w-full"
+            className="w-full rounded-xl"
             disabled={isProcessing}
           >
             {isProcessing ? (
@@ -189,7 +195,7 @@ const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoad
           <Button
             onClick={handleFinanceInvoice}
             disabled={!extractedData || isSubmitting}
-            className="w-full"
+            className="w-full rounded-xl"
           >
             {isSubmitting ? (
               <>
@@ -204,7 +210,7 @@ const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoad
             onClick={handleCancel}
             variant="outline"
             disabled={!file && !extractedData}
-            className="col-span-2"
+            className="col-span-2 rounded-xl"
           >
             Cancel
           </Button>

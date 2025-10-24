@@ -4,6 +4,7 @@ const AccountStatusCard = ({ name, financialData }: { name: string, financialDat
   const { totalInvoiceAmount, totalAvailableAmount, totalRepaid, totalBorrowed } = financialData;
 
   // Calculate percentages for the segmented bar
+  // TODO: this should be account balance for stablecoin that we use
   const balance = totalBorrowed - totalRepaid;
   const outstandingBorrowed = totalBorrowed - totalRepaid;
 

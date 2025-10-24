@@ -150,7 +150,7 @@ export default function Home() {
           <div className="flex flex-1 pb-[90px]">
             {/* TODO: add financial data here from the smart contract. */}
             {activePage === "home" && <HomePage userData={userData} financialData={financialData} setActivePage={setActivePage} refetchUser={refetchUser} isAuthenticated={isAuthenticated} invoices={invoices} />}
-            {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage activePage={activePage} setActivePage={setActivePage} />}
+            {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage financialData={financialData} activePage={activePage} setActivePage={setActivePage} />}
             {activePage === "upload" && <UploadPage appendInvoice={appendInvoice} appendFinancialData={appendFinancialData} setActivePage={setActivePage} setLoadingState={setLoadingState} />}
             {activePage === "wallet" && <WalletPage />}
             {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} company={companyData} setActivePage={setActivePage} isAuthenticated={isAuthenticated} refetchUser={refetchUser} />}
