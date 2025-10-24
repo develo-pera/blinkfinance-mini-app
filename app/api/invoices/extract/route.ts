@@ -1,3 +1,5 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { withAuth } from "@/lib/middleware";
@@ -16,6 +18,16 @@ interface ExtractedInvoiceData {
 // POST /api/invoices/extract - Extract invoice data from PDF
 export const POST = withAuth(async (request: NextRequest, _context: any, _user: any) => {
   const openaiApiKey = process.env.OPENAI_API_KEY;
+
+  const eid: ExtractedInvoiceData = {
+    invoiceNumber: "1234567890",
+    eInvoiceNumber: "1234567890",
+    issuedDate: "2024-01-01",
+    dueDate: "2024-01-01",
+    totalAmount: 1000,
+  }
+
+  console.log("EID", eid);
 
   // Initialize OpenAI client
   const openai = new OpenAI({
