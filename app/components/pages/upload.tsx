@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { InvoiceType } from "../common/invoice-card";
 import { ActivePage } from "@/app/page";
+import SignInButton from "../common/sign-in-button";
 // Interface for extracted invoice data
 interface ExtractedInvoiceData {
   id: number;
@@ -32,7 +33,7 @@ const mockExtractInvoiceData = {
   amount: 14653.00
 } as ExtractedInvoiceData;
 
-const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoadingState }: { appendInvoice: (invoice: InvoiceType) => void, appendFinancialData: (financialData: FinancialData) => void, setActivePage: (page: ActivePage) => void, setLoadingState: (loadingState: boolean) => void }) => {
+const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoadingState, isAuthenticated, refetchUser }: { appendInvoice: (invoice: InvoiceType) => void, appendFinancialData: (financialData: FinancialData) => void, setActivePage: (page: ActivePage) => void, setLoadingState: (loadingState: boolean) => void, isAuthenticated: boolean, refetchUser: () => void }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -147,6 +148,15 @@ const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoad
     setFile(null);
     setExtractedData(null);
   };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="p-4 flex flex-col flex-1">
+        <p className="opacity-80">Please sign in to upload invoices</p>
+        <SignInButton className="mt-auto" refetchUser={refetchUser} />
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 flex flex-col flex-1">

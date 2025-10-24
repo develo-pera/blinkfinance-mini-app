@@ -149,9 +149,19 @@ export default function Home() {
           <Header className={applyClassOnHeader(activePage)} loadingState={loadingState} />
           <div className="flex flex-1 pb-[90px]">
             {/* TODO: add financial data here from the smart contract. */}
-            {activePage === "home" && <HomePage userData={userData} financialData={financialData} setActivePage={setActivePage} refetchUser={refetchUser} isAuthenticated={isAuthenticated} invoices={invoices} />}
+            {
+              activePage === "home" &&
+              <HomePage
+                userData={userData}
+                financialData={financialData}
+                setActivePage={setActivePage}
+                refetchUser={refetchUser}
+                isAuthenticated={isAuthenticated}
+                invoices={invoices}
+                address={address}
+              />}
             {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage financialData={financialData} activePage={activePage} setActivePage={setActivePage} />}
-            {activePage === "upload" && <UploadPage appendInvoice={appendInvoice} appendFinancialData={appendFinancialData} setActivePage={setActivePage} setLoadingState={setLoadingState} />}
+            {activePage === "upload" && <UploadPage appendInvoice={appendInvoice} appendFinancialData={appendFinancialData} setActivePage={setActivePage} setLoadingState={setLoadingState} isAuthenticated={isAuthenticated} refetchUser={refetchUser} />}
             {activePage === "wallet" && <WalletPage />}
             {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} company={companyData} setActivePage={setActivePage} isAuthenticated={isAuthenticated} refetchUser={refetchUser} />}
             {

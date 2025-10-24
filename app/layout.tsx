@@ -48,7 +48,7 @@ export default function RootLayout({
           <ThemeProvider
             attribute="class"
             // TODO: change to dark mode by default if system isn't working
-            defaultTheme="light"
+            defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >

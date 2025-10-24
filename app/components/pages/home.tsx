@@ -8,6 +8,7 @@ import SignInButton from "../common/sign-in-button";
 import InvoiceList from "../common/invoice-list";
 import { InvoiceType } from "../common/invoice-card";
 import { FinancialData } from "@/app/page";
+import { Address } from "viem";
 
 const HomePage = ({
   userData,
@@ -15,7 +16,8 @@ const HomePage = ({
   setActivePage,
   refetchUser,
   isAuthenticated,
-  invoices
+  invoices,
+  address
 }: {
   userData?: IUser,
   financialData: FinancialData,
@@ -23,13 +25,14 @@ const HomePage = ({
   refetchUser: () => void
   isAuthenticated: boolean
   invoices: InvoiceType[]
+  address: Address | undefined
 }
 ) => {
   return (
     <div className="flex flex-col flex-1">
       <div className="bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] mt-[-1px]">
         <div className="px-4 pt-5 pb-7">
-          <AccountStatusCard name={userData?.displayName || ""} financialData={financialData} />
+          <AccountStatusCard name={userData?.displayName || ""} financialData={financialData} address={address} />
           {
             isAuthenticated ? (
               <div className="mt-2 grid grid-cols-2 gap-2">
@@ -47,17 +50,7 @@ const HomePage = ({
         </div>
       </div>
       <div className="mt-5">
-        {
-          isAuthenticated ? (
-            <InvoiceList invoices={invoices} setActivePage={setActivePage} />
-          ) : (
-            <div className="mt-5 bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] rounded-xl p-4 relative overflow-hidden">
-              <div className="relative z-1">
-                <p className="opacity-80">Please sign in to view your invoices</p>
-              </div>
-            </div>
-          )
-        }
+        <InvoiceList invoices={invoices} setActivePage={setActivePage} isAuthenticated={isAuthenticated} />
       </div>
     </div>
   );

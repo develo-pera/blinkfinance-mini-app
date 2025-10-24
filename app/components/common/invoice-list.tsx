@@ -12,12 +12,12 @@ export const formatInvoiceDate = (date: Date): string => {
   return `${day}.${month}.${year}`;
 };
 
-const InvoiceList = ({ invoices, setActivePage }: { invoices: InvoiceType[], setActivePage: (page: ActivePage) => void }) => {
+const InvoiceList = ({ invoices, setActivePage, isAuthenticated }: { invoices: InvoiceType[], setActivePage: (page: ActivePage) => void, isAuthenticated: boolean }) => {
   return (
     <div className="p-4">
       <div className="flex items-center justify-between px-4">
         <p className="">Uploaded Invoices</p>
-        <Button onClick={() => setActivePage("upload")} className="rounded-xl bg-[var(--bf-card-background)] text-foreground">
+        <Button disabled={!isAuthenticated} onClick={() => setActivePage("upload")} className="rounded-xl bg-[var(--bf-card-background)] text-foreground">
           <Plus className="w-2.5 h-2.5" />
           Add Invoice
         </Button>
