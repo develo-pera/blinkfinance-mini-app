@@ -9,3 +9,10 @@ export function cn(...inputs: ClassValue[]) {
 export function truncateAddress(address: Address): string {
   return address.slice(0, 6) + "..." + address.slice(-4);
 }
+
+export function formatAmount(amount: number): string {
+  return amount.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+}

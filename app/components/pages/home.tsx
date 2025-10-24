@@ -5,19 +5,24 @@ import AccountStatusCard from "../common/account-status-card";
 import { Button } from "@/components/ui/button";
 import { ActivePage } from "@/app/page";
 import SignInButton from "../common/sign-in-button";
+import InvoiceList from "../common/invoice-list";
+import { InvoiceType } from "../common/invoice-card";
+import { FinancialData } from "@/app/page";
 
 const HomePage = ({
   userData,
   financialData,
   setActivePage,
   refetchUser,
-  isAuthenticated
+  isAuthenticated,
+  invoices
 }: {
   userData?: IUser,
-  financialData?: { totalAmount: number, totalRepaid: number, totalBorrowed: number },
+  financialData: FinancialData,
   setActivePage: (page: ActivePage) => void,
   refetchUser: () => void
   isAuthenticated: boolean
+  invoices: InvoiceType[]
 }
 ) => {
   return (
@@ -40,6 +45,19 @@ const HomePage = ({
             )
           }
         </div>
+      </div>
+      <div className="mt-5">
+        {
+          isAuthenticated ? (
+            <InvoiceList invoices={invoices} setActivePage={setActivePage} />
+          ) : (
+            <div className="mt-5 bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] rounded-xl p-4 relative overflow-hidden">
+              <div className="relative z-1">
+                <p className="opacity-80">Please sign in to view your invoices</p>
+              </div>
+            </div>
+          )
+        }
       </div>
     </div>
   );

@@ -1,12 +1,16 @@
-const AccountStatusCard = ({ name, financialData }: { name: string, financialData?: { totalAmount: number, totalRepaid: number, totalBorrowed: number } }) => {
-  const { totalAmount, totalRepaid, totalBorrowed } = financialData || { totalAmount: 0, totalRepaid: 0, totalBorrowed: 0 };
+import { FinancialData } from "@/app/page";
+
+const AccountStatusCard = ({ name, financialData }: { name: string, financialData: FinancialData }) => {
+  const { totalInvoiceAmount, totalAvailableAmount, totalRepaid, totalBorrowed } = financialData;
 
   // Calculate percentages for the segmented bar
-  const balance = totalAmount - totalRepaid - totalBorrowed;
-  const outstandingBorrowed = totalBorrowed - totalRepaid; // 4000 - 2500 = 1500
-  const repaidPercentage = (totalRepaid / totalAmount) * 100; // 25%
-  const outstandingBorrowedPercentage = (outstandingBorrowed / totalAmount) * 100; // 15%
-  const availablePercentage = (balance / totalAmount) * 100; // 35%
+  const balance = totalBorrowed - totalRepaid;
+  const outstandingBorrowed = totalBorrowed - totalRepaid;
+
+  // Fixed percentage calculations
+  const repaidPercentage = (totalRepaid / totalInvoiceAmount) * 100; // ~17%
+  const outstandingBorrowedPercentage = (outstandingBorrowed / totalInvoiceAmount) * 100; // 50% of bar
+  const availablePercentage = ((totalAvailableAmount - totalBorrowed) / totalInvoiceAmount) * 100; // Up to 97.5%
 
   return (
     <div className="bg-[var(--bf-card-background)] p-4 rounded-xl">
@@ -49,8 +53,8 @@ const AccountStatusCard = ({ name, financialData }: { name: string, financialDat
         {/* Summary Stats */}
         <div className="mt-5 grid grid-cols-2 gap-2 text-sm">
           <div>
-            <p className="text-gray-500">Total Amount</p>
-            <p className="font-semibold">${totalAmount.toLocaleString()}</p>
+            <p className="text-gray-500">Total Invoice Amount</p>
+            <p className="font-semibold">${totalInvoiceAmount.toLocaleString()}</p>
           </div>
           <div>
             <p className="text-gray-500">Total Repaid</p>
@@ -61,8 +65,8 @@ const AccountStatusCard = ({ name, financialData }: { name: string, financialDat
             <p className="font-semibold text-green-600">${outstandingBorrowed.toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-gray-500">Available</p>
-            <p className="font-semibold text-purple-600">${balance.toLocaleString()}</p>
+            <p className="text-gray-500">Available To Borrow</p>
+            <p className="font-semibold text-purple-600">${totalAvailableAmount.toLocaleString()}</p>
           </div>
         </div>
       </div>

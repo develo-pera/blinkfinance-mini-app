@@ -25,6 +25,7 @@ import CompleteProfilePage from "./components/pages/complete-profile";
 import EditProfilePage from "./components/pages/edit-profile";
 import EditCompanyPage from "./components/pages/edit-company";
 import BorrowRepayPage from "./components/pages/borrow-repay";
+import { InvoiceType } from "./components/common/invoice-card";
 
 export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile" | "edit-company" | "borrow" | "repay";
 
@@ -35,6 +36,20 @@ const applyClassOnHeader = (activePage: ActivePage) => {
     default:
       return "";
   }
+}
+
+export type FinancialData = {
+  totalInvoiceAmount: number;
+  totalAvailableAmount: number;
+  totalRepaid: number;
+  totalBorrowed: number;
+}
+
+const initialFinancialData: FinancialData = {
+  totalInvoiceAmount: 0,
+  totalAvailableAmount: 0,
+  totalRepaid: 0,
+  totalBorrowed: 0,
 }
 
 export default function Home() {
@@ -55,13 +70,26 @@ export default function Home() {
   const { data: companyData, isLoading: isFetchingCompany, error: _fetchCompanyError, refetch: refetchCompany } = useFetchCompany(userData?.id);
   const [activePage, setActivePage] = useState<ActivePage>("home");
   const [loadingState, setLoadingState] = useState<boolean>(false);
+  const [invoices, setInvoices] = useState<InvoiceType[]>([]);
+  const [financialData, setFinancialData] = useState<FinancialData>(initialFinancialData);
 
   console.log("context", context);
   console.log("userData", userData);
   // console.log("data", data);
   // console.log("error", error);
 
-  const isAuthenticated = !!localStorage.getItem("bf-token");
+  const isAuthenticated = !!localStorage?.getItem("bf-token");
+
+  const appendInvoice = (invoice: InvoiceType) => {
+    setInvoices([...invoices, invoice]);
+  }
+
+  const appendFinancialData = (newFinancialData: FinancialData) => {
+    setFinancialData({
+      ...financialData,
+      ...newFinancialData,
+    });
+  }
 
   useEffect(() => {
     const allowDemo = localStorage.getItem(CONSTANTS.localStorageKeys.BFAllowDemo);
@@ -121,9 +149,9 @@ export default function Home() {
           <Header className={applyClassOnHeader(activePage)} loadingState={loadingState} />
           <div className="flex flex-1 pb-[90px]">
             {/* TODO: add financial data here from the smart contract. */}
-            {activePage === "home" && <HomePage userData={userData} financialData={undefined} setActivePage={setActivePage} refetchUser={refetchUser} isAuthenticated={isAuthenticated} />}
+            {activePage === "home" && <HomePage userData={userData} financialData={financialData} setActivePage={setActivePage} refetchUser={refetchUser} isAuthenticated={isAuthenticated} invoices={invoices} />}
             {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage activePage={activePage} setActivePage={setActivePage} />}
-            {activePage === "upload" && <UploadPage />}
+            {activePage === "upload" && <UploadPage appendInvoice={appendInvoice} appendFinancialData={appendFinancialData} setActivePage={setActivePage} setLoadingState={setLoadingState} />}
             {activePage === "wallet" && <WalletPage />}
             {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} company={companyData} setActivePage={setActivePage} isAuthenticated={isAuthenticated} refetchUser={refetchUser} />}
             {
