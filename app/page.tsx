@@ -78,7 +78,7 @@ export default function Home() {
   // console.log("data", data);
   // console.log("error", error);
 
-  const isAuthenticated = !!localStorage?.getItem("bf-token");
+  const isAuthenticated = window && typeof window !== 'undefined' ? !!localStorage?.getItem("bf-token") : false;
 
   const appendInvoice = (invoice: InvoiceType) => {
     setInvoices([...invoices, invoice]);
