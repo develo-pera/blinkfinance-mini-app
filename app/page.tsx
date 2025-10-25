@@ -85,7 +85,7 @@ export default function Home() {
   // console.log("data", data);
   // console.log("error", error);
 
-  const isAuthenticated = !!localStorage?.getItem("bf-token");
+  const isAuthenticated = typeof window !== 'undefined' ? !!localStorage?.getItem("bf-token") : false;
 
   const appendInvoice = (invoice: InvoiceType) => {
     setInvoices([...invoices, invoice]);
@@ -99,6 +99,8 @@ export default function Home() {
   }
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const allowDemo = localStorage.getItem(CONSTANTS.localStorageKeys.BFAllowDemo);
     if (allowDemo === "true") {
       setAllowDemo(true);
