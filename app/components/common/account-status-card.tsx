@@ -1,26 +1,14 @@
-"use client";
-
 import { FinancialData } from "@/app/page";
-import { useBalance } from "wagmi";
-import { Address } from "viem";
-import { baseSepolia } from "wagmi/chains";
-import { formatUnits } from "viem";
+import { RefreshCcwIcon } from "lucide-react";
 
-const AccountStatusCard = ({ name, financialData, address }: { name: string, financialData: FinancialData, address: Address | undefined }) => {
+const AccountStatusCard = ({ name, financialData, balance, refetchMockStabelcoinBalance }: { name: string, financialData: FinancialData, balance: number, refetchMockStabelcoinBalance: () => void }) => {
   const { totalInvoiceAmount, totalAvailableAmount, totalRepaid, totalBorrowed } = financialData;
-  const { data } = useBalance({
-    address: address,
-    chainId: baseSepolia.id,
-  });
-
-  const balance = (Number(formatUnits(data?.value || BigInt(0), 18))).toFixed(2);
-
-  console.log("balance data", data);
+  console.log("balance data", balance);
 
   // Calculate percentages for the segmented bar
   // TODO: this should be account balance for stablecoin that we use
   const availableBalance = totalAvailableAmount - totalBorrowed;
-  const outstandingBorrowed = totalBorrowed - totalRepaid;
+  const outstandingBorrowed = balance || totalBorrowed - totalRepaid;
 
   // Fixed percentage calculations
   const repaidPercentage = (totalRepaid / totalInvoiceAmount) * 100; // ~17%
@@ -31,7 +19,10 @@ const AccountStatusCard = ({ name, financialData, address }: { name: string, fin
     <div className="bg-[var(--bf-card-background)] p-4 rounded-xl">
       <p className="mb-7 text-xl">Hello {name}</p>
       <p className="text-sm text-gray-500">Account Balance</p>
-      <p className="text-3xl font-bold">${balance?.toLocaleString()}</p>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-3xl font-bold">${balance?.toLocaleString()}</p>
+        <p onClick={refetchMockStabelcoinBalance} className="text-sm text-gray-500 cursor-pointer flex items-center gap-2"> <RefreshCcwIcon className="w-3 h-3" /> Refresh balance</p>
+      </div>
       <div className="mt-7">
         {/* Segmented Bar Chart */}
         <div className="w-full h-2 bg-[#242424] dark:bg-gray-200 rounded-full overflow-hidden flex">

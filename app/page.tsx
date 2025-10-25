@@ -26,6 +26,8 @@ import EditProfilePage from "./components/pages/edit-profile";
 import EditCompanyPage from "./components/pages/edit-company";
 import BorrowRepayPage from "./components/pages/borrow-repay";
 import { InvoiceType } from "./components/common/invoice-card";
+import useFetchMockStabelcoinBalance from "./hooks/useFetchMockStabelcoinBalance";
+import { formatUnits } from "viem";
 
 export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile" | "edit-company" | "borrow" | "repay";
 
@@ -72,13 +74,18 @@ export default function Home() {
   const [loadingState, setLoadingState] = useState<boolean>(false);
   const [invoices, setInvoices] = useState<InvoiceType[]>([]);
   const [financialData, setFinancialData] = useState<FinancialData>(initialFinancialData);
+  const { data: mockStablecoinBalance, refetch: refetchMockStabelcoinBalance } = useFetchMockStabelcoinBalance(address);
 
   console.log("context", context);
   console.log("userData", userData);
+
+  const userName = userData?.displayName || context?.user?.displayName;
+  const profileCompleted = userName && userData?.email;
+
   // console.log("data", data);
   // console.log("error", error);
 
-  const isAuthenticated = window && typeof window !== 'undefined' ? !!localStorage?.getItem("bf-token") : false;
+  const isAuthenticated = !!localStorage?.getItem("bf-token");
 
   const appendInvoice = (invoice: InvoiceType) => {
     setInvoices([...invoices, invoice]);
@@ -154,14 +161,16 @@ export default function Home() {
               <HomePage
                 userData={userData}
                 financialData={financialData}
+                balance={Number(formatUnits(mockStablecoinBalance?.value || BigInt(0), 6))}
                 setActivePage={setActivePage}
                 refetchUser={refetchUser}
                 isAuthenticated={isAuthenticated}
                 invoices={invoices}
                 address={address}
+                refetchMockStabelcoinBalance={refetchMockStabelcoinBalance}
               />}
-            {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage financialData={financialData} activePage={activePage} setActivePage={setActivePage} />}
-            {activePage === "upload" && <UploadPage appendInvoice={appendInvoice} appendFinancialData={appendFinancialData} setActivePage={setActivePage} setLoadingState={setLoadingState} isAuthenticated={isAuthenticated} refetchUser={refetchUser} />}
+            {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage financialData={financialData} activePage={activePage} setActivePage={setActivePage} refetchMockStabelcoinBalance={refetchMockStabelcoinBalance} />}
+            {activePage === "upload" && <UploadPage appendInvoice={appendInvoice} appendFinancialData={appendFinancialData} setActivePage={setActivePage} setLoadingState={setLoadingState} isAuthenticated={isAuthenticated} refetchUser={refetchUser} profileCompleted={profileCompleted} />}
             {activePage === "wallet" && <WalletPage />}
             {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} company={companyData} setActivePage={setActivePage} isAuthenticated={isAuthenticated} refetchUser={refetchUser} />}
             {

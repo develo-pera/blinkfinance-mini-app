@@ -17,22 +17,27 @@ const HomePage = ({
   refetchUser,
   isAuthenticated,
   invoices,
-  address
+  address,
+  balance,
+  refetchMockStabelcoinBalance,
 }: {
   userData?: IUser,
   financialData: FinancialData,
   setActivePage: (page: ActivePage) => void,
-  refetchUser: () => void
-  isAuthenticated: boolean
-  invoices: InvoiceType[]
-  address: Address | undefined
+  refetchUser: () => void,
+  isAuthenticated: boolean,
+  invoices: InvoiceType[],
+  address: Address | undefined,
+  balance: number
+  refetchMockStabelcoinBalance: () => void,
 }
 ) => {
   return (
     <div className="flex flex-col flex-1">
       <div className="bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] mt-[-1px]">
         <div className="px-4 pt-5 pb-7">
-          <AccountStatusCard name={userData?.displayName || ""} financialData={financialData} address={address} />
+
+          <AccountStatusCard name={userData?.displayName || ""} financialData={financialData} balance={balance} refetchMockStabelcoinBalance={refetchMockStabelcoinBalance} />
           {
             isAuthenticated ? (
               <div className="mt-2 grid grid-cols-2 gap-2">

@@ -35,7 +35,7 @@ const mockExtractInvoiceData = {
   amount: 14653.00
 } as ExtractedInvoiceData;
 
-const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoadingState, isAuthenticated, refetchUser }: { appendInvoice: (invoice: InvoiceType) => void, appendFinancialData: (financialData: FinancialData) => void, setActivePage: (page: ActivePage) => void, setLoadingState: (loadingState: boolean) => void, isAuthenticated: boolean, refetchUser: () => void }) => {
+const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoadingState, isAuthenticated, refetchUser, profileCompleted }: { appendInvoice: (invoice: InvoiceType) => void, appendFinancialData: (financialData: FinancialData) => void, setActivePage: (page: ActivePage) => void, setLoadingState: (loadingState: boolean) => void, isAuthenticated: boolean, refetchUser: () => void, profileCompleted: boolean }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -156,6 +156,15 @@ const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoad
       <div className="p-4 flex flex-col flex-1">
         <p className="opacity-80">Please sign in to upload invoices</p>
         <SignInButton className="mt-auto" refetchUser={refetchUser} />
+      </div>
+    );
+  }
+
+  if (!profileCompleted) {
+    return (
+      <div className="p-4 flex flex-col flex-1">
+        <p className="opacity-80">Please complete your profile to upload invoices</p>
+        <Button onClick={() => setActivePage("complete-profile")} className="mt-auto rounded-xl bg-[var(--bf-card-background)] text-foreground">Complete profile</Button>
       </div>
     );
   }

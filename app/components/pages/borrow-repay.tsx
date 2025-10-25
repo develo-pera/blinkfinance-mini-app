@@ -5,12 +5,36 @@ import { ActivePage, FinancialData } from "@/app/page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import CONSTANTS from "@/lib/consts";
+import { useWriteContract, createConfig } from "wagmi";
+import { baseSepolia } from "wagmi/chains";
+import { http } from "viem";
+import { waitForTransactionReceipt } from "viem/actions";
+import { useEffect } from "react";
 
-const BorrowPage = ({ availableToBorrow, setActivePage }: { availableToBorrow: number, setActivePage: (page: ActivePage) => void }) => {
+const config = createConfig({
+  chains: [baseSepolia],
+  transports: {
+    [baseSepolia.id]: http(baseSepolia.rpcUrls.default.http[0]),
+  },
+});
+
+const BorrowPage = ({ availableToBorrow, setActivePage, refetchMockStabelcoinBalance }: { availableToBorrow: number, setActivePage: (page: ActivePage) => void, refetchMockStabelcoinBalance: () => void }) => {
   const amountToBorrowInputRef = useRef<HTMLInputElement>(null);
+  const { writeContract, isSuccess } = useWriteContract({
+    config,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Cash received");
+      refetchMockStabelcoinBalance();
+    }
+  }, [isSuccess]);
 
   const handleGetCash = () => {
-    const amountToBorrow = amountToBorrowInputRef.current?.value
+    const amountToBorrow = amountToBorrowInputRef.current?.value;
+
     if (!amountToBorrow) {
       toast.error("Please enter an amount to borrow");
       return;
@@ -19,7 +43,25 @@ const BorrowPage = ({ availableToBorrow, setActivePage }: { availableToBorrow: n
       toast.error("You can't borrow more than you have available");
       return;
     }
-    // TODO: call the smart contract to get cash
+
+    const result = writeContract({
+      address: CONSTANTS.token.mockBFStabelcoinVault,
+      abi: [
+        {
+          name: "selfMint",
+          type: "function",
+          inputs: [
+            { name: "amount", type: "uint256" },
+          ]
+        }
+      ],
+      functionName: "selfMint",
+      args: [Number(amountToBorrow) * 1000000],
+    });
+
+    waitForTransactionReceipt
+
+    console.log("tx", result);
   }
 
   if (availableToBorrow <= 0) {
@@ -57,11 +99,11 @@ const RepayPage = ({ outstandingBorrowed, setActivePage }: { outstandingBorrowed
   );
 }
 
-const BorrowRepayPage = ({ activePage, setActivePage, financialData }: { activePage: ActivePage, setActivePage: (page: ActivePage) => void, financialData: FinancialData }) => {
+const BorrowRepayPage = ({ activePage, setActivePage, financialData, refetchMockStabelcoinBalance }: { activePage: ActivePage, setActivePage: (page: ActivePage) => void, financialData: FinancialData, refetchMockStabelcoinBalance: () => void }) => {
   return (
     <div className="p-4 flex flex-col flex-1">
       <h1>{activePage.charAt(0).toUpperCase() + activePage.slice(1)}</h1>
-      {activePage === "borrow" && <BorrowPage availableToBorrow={financialData.totalAvailableAmount - financialData.totalBorrowed} setActivePage={setActivePage} />}
+      {activePage === "borrow" && <BorrowPage availableToBorrow={financialData.totalAvailableAmount - financialData.totalBorrowed} setActivePage={setActivePage} refetchMockStabelcoinBalance={refetchMockStabelcoinBalance} />}
       {activePage === "repay" && <RepayPage outstandingBorrowed={financialData.totalBorrowed - financialData.totalRepaid} setActivePage={setActivePage} />}
       <Button onClick={() => setActivePage("home")} className="mt-auto w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">Go back</Button>
     </div>

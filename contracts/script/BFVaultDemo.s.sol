@@ -2,17 +2,17 @@
 pragma solidity ^0.8.13;
 
 import {Script, console} from "forge-std/Script.sol";
-import {Counter} from "../src/Counter.sol";
+import {BFVaultDemo} from "../src/BFVaultDemo.sol";
 
-contract CounterScript is Script {
-    Counter public counter;
+contract BFVaultDemoScript is Script {
+    BFVaultDemo public bfVaultDemo;
 
     function setUp() public {}
 
     function run() public {
         vm.startBroadcast();
 
-        counter = new Counter();
+        bfVaultDemo = new BFVaultDemo();
 
         vm.stopBroadcast();
     }
