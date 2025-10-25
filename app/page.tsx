@@ -166,7 +166,6 @@ export default function Home() {
                 refetchUser={refetchUser}
                 isAuthenticated={isAuthenticated}
                 invoices={invoices}
-                address={address}
                 refetchMockStabelcoinBalance={refetchMockStabelcoinBalance}
               />}
             {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage financialData={financialData} activePage={activePage} setActivePage={setActivePage} refetchMockStabelcoinBalance={refetchMockStabelcoinBalance} />}
