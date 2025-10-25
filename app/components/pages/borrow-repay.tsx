@@ -59,8 +59,6 @@ const BorrowPage = ({ availableToBorrow, setActivePage, refetchMockStabelcoinBal
       args: [Number(amountToBorrow) * 1000000],
     });
 
-    waitForTransactionReceipt
-
     console.log("tx", result);
   }
 

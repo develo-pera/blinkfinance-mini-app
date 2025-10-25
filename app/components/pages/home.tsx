@@ -17,7 +17,6 @@ const HomePage = ({
   refetchUser,
   isAuthenticated,
   invoices,
-  address,
   balance,
   refetchMockStabelcoinBalance,
 }: {
@@ -27,7 +26,6 @@ const HomePage = ({
   refetchUser: () => void,
   isAuthenticated: boolean,
   invoices: InvoiceType[],
-  address: Address | undefined,
   balance: number
   refetchMockStabelcoinBalance: () => void,
 }
