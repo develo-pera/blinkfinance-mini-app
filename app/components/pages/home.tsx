@@ -8,7 +8,6 @@ import SignInButton from "../common/sign-in-button";
 import InvoiceList from "../common/invoice-list";
 import { InvoiceType } from "../common/invoice-card";
 import { FinancialData } from "@/app/page";
-import { Address } from "viem";
 
 const HomePage = ({
   userData,

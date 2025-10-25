@@ -9,7 +9,6 @@ import CONSTANTS from "@/lib/consts";
 import { useWriteContract, createConfig } from "wagmi";
 import { baseSepolia } from "wagmi/chains";
 import { http } from "viem";
-import { waitForTransactionReceipt } from "viem/actions";
 import { useEffect } from "react";
 
 const config = createConfig({
