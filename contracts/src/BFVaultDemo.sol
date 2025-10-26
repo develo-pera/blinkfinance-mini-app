@@ -28,8 +28,9 @@ contract BFVaultDemo is ERC20, AccessControl, Ownable {
     }
 
     function approveAmount(address user, uint256 amount) public onlyRole(MANAGER_ROLE) {
-        approvedAmounts[user] = amount;
-        emit ApprovedAmountUpdated(user, amount);
+        uint256 ninetyPercentOfAmount = amount * 90 / 100;
+        approvedAmounts[user] += ninetyPercentOfAmount;
+        emit ApprovedAmountUpdated(user, ninetyPercentOfAmount);
     }
 
     function borrow(address user, uint256 amount) public onlyRole(MANAGER_ROLE) {
