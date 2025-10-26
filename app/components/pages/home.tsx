@@ -35,8 +35,7 @@ const HomePage = ({
     <div className="flex flex-col flex-1">
       <div className="bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] mt-[-1px]">
         <div className="px-4 pt-5 pb-7">
-
-          <AccountStatusCard name={userData?.displayName || ""} financialData={financialData} balance={balance} refetchMockStabelcoinBalance={refetchMockStabelcoinBalance} />
+          <AccountStatusCard name={userData?.displayName || ""} financialData={financialData} balance={balance} refetchMockStabelcoinBalance={refetchMockStabelcoinBalance} isFetchingInvoices={isFetchingInvoices} />
           {
             isAuthenticated ? (
               <div className="mt-2 grid grid-cols-2 gap-2">

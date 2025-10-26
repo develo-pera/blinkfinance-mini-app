@@ -3,6 +3,8 @@ import { withAuth } from "@/lib/middleware";
 import connectDB from "@/lib/mongodb";
 import { Invoice } from "@/models/Invoice";
 import { Company } from "@/models/Company";
+import { getEthereumWallet } from "@/lib/ethereum";
+import CONSTANTS from "@/lib/consts";
 
 export const GET = withAuth(async (_request: NextRequest, _context: any, user: any) => {
   try {
@@ -51,7 +53,37 @@ export const POST = withAuth(async (request: NextRequest, _context: any, user: a
       companyId: userCompany.id,
     });
 
-    return NextResponse.json({ success: true, data: invoice });
+    const wallet = getEthereumWallet({ localTestnet: true });
+    const { request: txRequest } = await wallet?.simulateContract({
+      account: wallet?.account,
+      address: CONSTANTS.token.mockBFStabelcoinVault as `0x${string}`,
+      abi: [
+        {
+          "type": "function",
+          "name": "approveAmount",
+          "inputs": [
+            {
+              "name": "user",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "amount",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        },
+      ],
+      functionName: "approveAmount",
+      args: [user?.walletAddress as `0x${string}`, BigInt(totalAmount * 1000000)],
+    });
+
+    const txHash = await wallet?.writeContract(txRequest);
+
+    return NextResponse.json({ success: true, data: invoice, txHash });
   } catch (error) {
     console.error('Error creating invoice:', error);
     return NextResponse.json(

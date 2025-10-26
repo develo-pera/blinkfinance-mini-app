@@ -32,7 +32,6 @@ export interface ExtractedInvoiceData {
 
 const UploadPage = ({
   refetchInvoices,
-  appendFinancialData,
   setActivePage,
   setLoadingState,
   isAuthenticated,
@@ -40,7 +39,6 @@ const UploadPage = ({
   profileCompleted,
 }: {
   refetchInvoices: () => void,
-  appendFinancialData: (financialData: FinancialData) => void,
   setActivePage: (page: ActivePage) => void,
   setLoadingState: (loadingState: boolean) => void,
   isAuthenticated: boolean, refetchUser: () => void,

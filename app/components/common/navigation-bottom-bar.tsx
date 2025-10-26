@@ -80,6 +80,7 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
 
   return (
     <div className={cn("px-4 py-4 fixed bottom-0 left-0 right-0 z-50", className)}>
+      <div className="absolute bottom-0 left-0 right-0 top-0 bg-gradient-to-t from-background to-transparent" />
       <div ref={containerRef} className="relative flex items-center justify-between gap-10 p-4 py-3 dark:bg-[#131313] bg-[#f5f5f5] rounded-xl">
         {/* Animated indicator */}
         {showAnimatedIndicator && <div

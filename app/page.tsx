@@ -27,7 +27,6 @@ import EditCompanyPage from "./components/pages/edit-company";
 import BorrowRepayPage from "./components/pages/borrow-repay";
 import useFetchMockStabelcoinBalance from "./hooks/useFetchMockStabelcoinBalance";
 import { formatUnits } from "viem";
-import { IInvoice } from "@/models/Invoice";
 import useFetchInvoices from "./hooks/useFetchInvoices";
 
 export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile" | "edit-company" | "borrow" | "repay";
@@ -89,12 +88,12 @@ export default function Home() {
 
   const isAuthenticated = typeof window !== 'undefined' ? !!localStorage?.getItem("bf-token") : false;
 
-  const appendFinancialData = (newFinancialData: FinancialData) => {
-    setFinancialData({
-      ...financialData,
-      ...newFinancialData,
-    });
-  }
+  // const appendFinancialData = (newFinancialData: FinancialData) => {
+  //   setFinancialData({
+  //     ...financialData,
+  //     ...newFinancialData,
+  //   });
+  // }
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -123,6 +122,16 @@ export default function Home() {
       setMiniAppReady();
     }
   }, [setMiniAppReady, isMiniAppReady]);
+
+  useEffect(() => {
+    if (!invoices) return;
+
+    const totalInvoiceAmount = invoices?.reduce((acc, invoice) => acc + invoice.totalAmount, 0);
+    setFinancialData({
+      ...financialData,
+      totalInvoiceAmount,
+    });
+  }, [invoices]);
 
   if (isInMiniAppLoading || !isMiniAppReady || isFetchingUser) {
     return <LoadingAppScreen />;
@@ -182,7 +191,6 @@ export default function Home() {
               activePage === "upload" &&
               <UploadPage
                 refetchInvoices={refetchInvoices}
-                appendFinancialData={appendFinancialData}
                 setActivePage={setActivePage}
                 setLoadingState={setLoadingState}
                 isAuthenticated={isAuthenticated}

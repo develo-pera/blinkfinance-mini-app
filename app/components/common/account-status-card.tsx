@@ -1,7 +1,7 @@
 import { FinancialData } from "@/app/page";
 import { RefreshCcwIcon } from "lucide-react";
 
-const AccountStatusCard = ({ name, financialData, balance, refetchMockStabelcoinBalance }: { name: string, financialData: FinancialData, balance: number, refetchMockStabelcoinBalance: () => void }) => {
+const AccountStatusCard = ({ name, financialData, balance, refetchMockStabelcoinBalance, isFetchingInvoices }: { name: string, financialData: FinancialData, balance: number, refetchMockStabelcoinBalance: () => void, isFetchingInvoices: boolean }) => {
   const { totalInvoiceAmount, totalAvailableAmount, totalRepaid, totalBorrowed } = financialData;
   console.log("balance data", balance);
 
@@ -60,7 +60,7 @@ const AccountStatusCard = ({ name, financialData, balance, refetchMockStabelcoin
         <div className="mt-5 grid grid-cols-2 gap-2 text-sm">
           <div>
             <p className="text-gray-500">Total Invoice Amount</p>
-            <p className="font-semibold">${totalInvoiceAmount.toLocaleString()}</p>
+            <p className="font-semibold">{isFetchingInvoices ? "Loading..." : `$${totalInvoiceAmount.toLocaleString()}`}</p>
           </div>
           <div>
             <p className="text-gray-500">Total Repaid</p>
