@@ -1,25 +1,26 @@
-import { formatAmount } from "@/lib/utils";
+import { capitalizeFirstLetter, formatAmount } from "@/lib/utils";
 import { formatInvoiceDate } from "./invoice-list";
+import { InvoiceType } from "@/models/Invoice";
 
-export type InvoiceType = {
-  id: number;
-  invoiceNumber: string;
-  eInvoiceNumber: string;
-  amount: number;
-  date: Date;
-  valid: boolean;
-  status: string;
-  invoiceDate: Date;
-  dueDate: Date;
-}
+// export type InvoiceType = {
+//   id: number;
+//   invoiceNumber: string;
+//   eInvoiceNumber: string;
+//   amount: number;
+//   date: Date;
+//   valid: boolean;
+//   status: string;
+//   invoiceDate: Date;
+//   dueDate: Date;
+// }
 
 const applyStatusColor = (status: string) => {
   switch (status) {
-    case "Pending":
+    case "pending":
       return "text-gray-500";
-    case "Approved":
+    case "approved":
       return "text-green-500";
-    case "Rejected":
+    case "aejected":
       return "text-red-500";
     default:
       return "text-gray-500";
@@ -34,8 +35,8 @@ const InvoiceCard = ({ invoice }: { invoice: InvoiceType }) => {
         <p>{invoice.status.charAt(0)}</p>
       </div> */}
       <div>
-        <p>Invoice No. {invoice.invoiceNumber} for {formatAmount(invoice.amount)}</p>
-        <p className="text-sm text-gray-500"><span className={applyStatusColor(invoice.status)}>{invoice.status}</span> · Issued {formatInvoiceDate(invoice.invoiceDate)} · Due {formatInvoiceDate(invoice.dueDate)} · Uploaded {formatInvoiceDate(invoice.date)}</p>
+        <p>Invoice No. {invoice.invoiceId} for {formatAmount(invoice.totalAmount)}</p>
+        <p className="text-sm text-gray-500"><span className={applyStatusColor(invoice.status)}>{capitalizeFirstLetter(invoice.status)}</span> · Issued {formatInvoiceDate(new Date(invoice.issuedDate))} · Due {formatInvoiceDate(new Date(invoice.dueDate))}</p>
       </div>
 
     </div>

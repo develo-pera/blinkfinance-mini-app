@@ -25,9 +25,10 @@ import CompleteProfilePage from "./components/pages/complete-profile";
 import EditProfilePage from "./components/pages/edit-profile";
 import EditCompanyPage from "./components/pages/edit-company";
 import BorrowRepayPage from "./components/pages/borrow-repay";
-import { InvoiceType } from "./components/common/invoice-card";
 import useFetchMockStabelcoinBalance from "./hooks/useFetchMockStabelcoinBalance";
 import { formatUnits } from "viem";
+import { IInvoice } from "@/models/Invoice";
+import useFetchInvoices from "./hooks/useFetchInvoices";
 
 export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile" | "edit-company" | "borrow" | "repay";
 
@@ -70,9 +71,10 @@ export default function Home() {
   const { address } = useAccount();
   const { data: userData, isLoading: isFetchingUser, error: _fetchUserError, refetch: refetchUser } = useFetchUser(address);
   const { data: companyData, isLoading: isFetchingCompany, error: _fetchCompanyError, refetch: refetchCompany } = useFetchCompany(userData?.id);
+  const { data: invoices, isLoading: isFetchingInvoices, error: _fetchInvoicesError, refetch: refetchInvoices } = useFetchInvoices(userData?.id);
   const [activePage, setActivePage] = useState<ActivePage>("home");
   const [loadingState, setLoadingState] = useState<boolean>(false);
-  const [invoices, setInvoices] = useState<InvoiceType[]>([]);
+  // const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [financialData, setFinancialData] = useState<FinancialData>(initialFinancialData);
   const { data: mockStablecoinBalance, refetch: refetchMockStabelcoinBalance } = useFetchMockStabelcoinBalance(address);
 
@@ -82,14 +84,10 @@ export default function Home() {
   const userName = userData?.displayName || context?.user?.displayName;
   const profileCompleted = userName && userData?.email;
 
-  // console.log("data", data);
+  console.log("invoices", invoices);
   // console.log("error", error);
 
   const isAuthenticated = typeof window !== 'undefined' ? !!localStorage?.getItem("bf-token") : false;
-
-  const appendInvoice = (invoice: InvoiceType) => {
-    setInvoices([...invoices, invoice]);
-  }
 
   const appendFinancialData = (newFinancialData: FinancialData) => {
     setFinancialData({
@@ -126,7 +124,7 @@ export default function Home() {
     }
   }, [setMiniAppReady, isMiniAppReady]);
 
-  if (isInMiniAppLoading || !isMiniAppReady || isFetchingUser || isFetchingCompany) {
+  if (isInMiniAppLoading || !isMiniAppReady || isFetchingUser) {
     return <LoadingAppScreen />;
   }
 
@@ -168,23 +166,70 @@ export default function Home() {
                 refetchUser={refetchUser}
                 isAuthenticated={isAuthenticated}
                 invoices={invoices}
+                isFetchingInvoices={isFetchingInvoices}
                 refetchMockStabelcoinBalance={refetchMockStabelcoinBalance}
               />}
-            {(activePage === "borrow" || activePage === "repay") && <BorrowRepayPage financialData={financialData} activePage={activePage} setActivePage={setActivePage} refetchMockStabelcoinBalance={refetchMockStabelcoinBalance} />}
-            {activePage === "upload" && <UploadPage appendInvoice={appendInvoice} appendFinancialData={appendFinancialData} setActivePage={setActivePage} setLoadingState={setLoadingState} isAuthenticated={isAuthenticated} refetchUser={refetchUser} profileCompleted={profileCompleted} />}
+            {
+              (activePage === "borrow" || activePage === "repay") &&
+              <BorrowRepayPage
+                financialData={financialData}
+                activePage={activePage}
+                setActivePage={setActivePage}
+                refetchMockStabelcoinBalance={refetchMockStabelcoinBalance}
+              />
+            }
+            {
+              activePage === "upload" &&
+              <UploadPage
+                refetchInvoices={refetchInvoices}
+                appendFinancialData={appendFinancialData}
+                setActivePage={setActivePage}
+                setLoadingState={setLoadingState}
+                isAuthenticated={isAuthenticated}
+                refetchUser={refetchUser}
+                profileCompleted={profileCompleted}
+              />
+            }
             {activePage === "wallet" && <WalletPage />}
-            {activePage === "profile" && <ProfilePage userData={userData} user={context?.user} address={address} company={companyData} setActivePage={setActivePage} isAuthenticated={isAuthenticated} refetchUser={refetchUser} />}
+            {
+              activePage === "profile" &&
+              <ProfilePage
+                userData={userData}
+                user={context?.user}
+                address={address}
+                company={companyData}
+                setActivePage={setActivePage}
+                isAuthenticated={isAuthenticated}
+                refetchUser={refetchUser} />}
             {
               activePage === "complete-profile" &&
-              <CompleteProfilePage user={context?.user} userData={userData} address={address} setLoadingState={setLoadingState} refetchUser={refetchUser} setActivePage={setActivePage} />
+              <CompleteProfilePage
+                user={context?.user}
+                userData={userData}
+                address={address}
+                setLoadingState={setLoadingState}
+                refetchUser={refetchUser}
+                setActivePage={setActivePage}
+              />
             }
             {
               activePage === "edit-profile" &&
-              <EditProfilePage userData={userData} setLoadingState={setLoadingState} refetchUser={refetchUser} setActivePage={setActivePage} />
+              <EditProfilePage
+                userData={userData}
+                setLoadingState={setLoadingState}
+                refetchUser={refetchUser}
+                setActivePage={setActivePage}
+              />
             }
             {
               activePage === "edit-company" &&
-              <EditCompanyPage userData={userData} companyData={companyData} setLoadingState={setLoadingState} refetchCompany={refetchCompany} setActivePage={setActivePage} />
+              <EditCompanyPage
+                userData={userData}
+                companyData={companyData}
+                setLoadingState={setLoadingState}
+                refetchCompany={refetchCompany}
+                setActivePage={setActivePage}
+              />
             }
           </div>
           {/* TODO: Remove mx-auto max-w-screen-md after demo is disabled. App will be available only as Mini App. */}

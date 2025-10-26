@@ -69,5 +69,8 @@ CompanySchema.virtual("owner", {
   justOne: true
 });
 
+CompanySchema.set("toJSON", { virtuals: true });
+CompanySchema.set("toObject", { virtuals: true });
+
 // Export Company model
 export const Company = mongoose.models.Company || mongoose.model<ICompany>("Company", CompanySchema);

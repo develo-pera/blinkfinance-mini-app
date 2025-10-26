@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { ActivePage } from "@/app/page";
-import InvoiceCard, { InvoiceType } from "./invoice-card";
+import InvoiceCard from "./invoice-card";
+import { InvoiceType } from "@/models/Invoice";
 
 // Helper function to format date as DD.MM.YYYY
 export const formatInvoiceDate = (date: Date): string => {
@@ -12,7 +13,7 @@ export const formatInvoiceDate = (date: Date): string => {
   return `${day}.${month}.${year}`;
 };
 
-const InvoiceList = ({ invoices, setActivePage, isAuthenticated }: { invoices: InvoiceType[], setActivePage: (page: ActivePage) => void, isAuthenticated: boolean }) => {
+const InvoiceList = ({ invoices, isFetchingInvoices, setActivePage, isAuthenticated }: { invoices: InvoiceType[], isFetchingInvoices: boolean, setActivePage: (page: ActivePage) => void, isAuthenticated: boolean }) => {
   return (
     <div className="p-4">
       <div className="flex items-center justify-between px-4">
@@ -23,12 +24,18 @@ const InvoiceList = ({ invoices, setActivePage, isAuthenticated }: { invoices: I
         </Button>
       </div>
       <div className="mt-5 grid gap-4">
-        {invoices?.length > 0 ? invoices?.map((invoice) => (
-          <InvoiceCard key={invoice.id} invoice={invoice} />
-        )) : (
+        {isFetchingInvoices ? (
           <div className="mt-5 px-4">
-            <p className="opacity-80">No invoices found</p>
+            <p className="opacity-80">Loading invoices...</p>
           </div>
+        ) : (
+          invoices?.length > 0 ? invoices?.map((invoice) => (
+            <InvoiceCard key={invoice.invoiceId} invoice={invoice} />
+          )) : (
+            <div className="mt-5 px-4">
+              <p className="opacity-80">No invoices found</p>
+            </div>
+          )
         )}
       </div>
     </div>

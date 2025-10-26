@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ActivePage } from "@/app/page";
 import SignInButton from "../common/sign-in-button";
 import InvoiceList from "../common/invoice-list";
-import { InvoiceType } from "../common/invoice-card";
+import { InvoiceType } from "@/models/Invoice";
 import { FinancialData } from "@/app/page";
 
 const HomePage = ({
@@ -16,6 +16,7 @@ const HomePage = ({
   refetchUser,
   isAuthenticated,
   invoices,
+  isFetchingInvoices,
   balance,
   refetchMockStabelcoinBalance,
 }: {
@@ -25,6 +26,7 @@ const HomePage = ({
   refetchUser: () => void,
   isAuthenticated: boolean,
   invoices: InvoiceType[],
+  isFetchingInvoices: boolean,
   balance: number
   refetchMockStabelcoinBalance: () => void,
 }
@@ -52,7 +54,7 @@ const HomePage = ({
         </div>
       </div>
       <div className="mt-5">
-        <InvoiceList invoices={invoices} setActivePage={setActivePage} isAuthenticated={isAuthenticated} />
+        <InvoiceList invoices={invoices} isFetchingInvoices={isFetchingInvoices} setActivePage={setActivePage} isAuthenticated={isAuthenticated} />
       </div>
     </div>
   );

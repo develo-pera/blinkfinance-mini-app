@@ -5,37 +5,47 @@ import { Button } from "@/components/ui/button";
 import Invoice from "../common/invoice";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { InvoiceType } from "../common/invoice-card";
 import { ActivePage } from "@/app/page";
 import SignInButton from "../common/sign-in-button";
 import { FinancialData } from "@/app/page";
 
 // Interface for extracted invoice data
-interface ExtractedInvoiceData {
-  id: number;
-  invoiceNumber: string;
-  eInvoiceNumber?: string;
-  date: Date;
-  valid: boolean;
-  status: string;
-  invoiceDate: Date;
+export interface ExtractedInvoiceData {
+  invoiceId: string;
+  eInvoiceId?: string;
+  issuedDate: Date;
   dueDate: Date;
-  amount: number;
+  valid: boolean;
+  totalAmount: number;
 }
 
-const mockExtractInvoiceData = {
-  id: 1,
-  invoiceNumber: "2403251",
-  eInvoiceNumber: "d1b2650e-1e64-4cb2-9e5b-a49e23f54802",
-  date: new Date(),
-  valid: true,
-  status: "Approved",
-  invoiceDate: new Date(),
-  dueDate: new Date(),
-  amount: 14653.00
-} as ExtractedInvoiceData;
+// const mockExtractInvoiceData = {
+//   id: 1,
+//   invoiceNumber: "2403251",
+//   eInvoiceNumber: "d1b2650e-1e64-4cb2-9e5b-a49e23f54802",
+//   valid: true,
+//   status: "Approved",
+//   invoiceDate: new Date(),
+//   dueDate: new Date(),
+//   amount: 14653.00
+// } as ExtractedInvoiceData;
 
-const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoadingState, isAuthenticated, refetchUser, profileCompleted }: { appendInvoice: (invoice: InvoiceType) => void, appendFinancialData: (financialData: FinancialData) => void, setActivePage: (page: ActivePage) => void, setLoadingState: (loadingState: boolean) => void, isAuthenticated: boolean, refetchUser: () => void, profileCompleted: boolean }) => {
+const UploadPage = ({
+  refetchInvoices,
+  appendFinancialData,
+  setActivePage,
+  setLoadingState,
+  isAuthenticated,
+  refetchUser,
+  profileCompleted,
+}: {
+  refetchInvoices: () => void,
+  appendFinancialData: (financialData: FinancialData) => void,
+  setActivePage: (page: ActivePage) => void,
+  setLoadingState: (loadingState: boolean) => void,
+  isAuthenticated: boolean, refetchUser: () => void,
+  profileCompleted: boolean,
+}) => {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,7 +56,7 @@ const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoad
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0];
 
     if (uploadedFile?.type !== "application/pdf") {
@@ -59,11 +69,30 @@ const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoad
       setFile(uploadedFile);
       setLoadingState(true);
 
-      setTimeout(() => {
-        setExtractedData(mockExtractInvoiceData);
-        setIsProcessing(false);
-        setLoadingState(false);
-      }, 3000);
+      const formData = new FormData();
+      formData.append("file", uploadedFile);
+      const response = await fetch("/api/invoices/extract", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("bf-token")}`,
+        },
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      const dueDate = result.data.dueDate || new Date(result.data.issuedDate).setDate(new Date(result.data.issuedDate).getDate() + 30);
+      // TODO: this is a temporary fix to convert the dates to date objects
+      const extractedData = {
+        ...result.data,
+        eInvoiceId: result.data.eInvoiceId || result.data.invoiceId,
+        issuedDate: new Date(result.data.issuedDate),
+        dueDate: new Date(dueDate),
+      } as ExtractedInvoiceData;
+
+      setExtractedData(extractedData);
+      setIsProcessing(false);
+      setLoadingState(false);
     }
   };
 
@@ -78,71 +107,34 @@ const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoad
 
     console.log("extractedData", extractedData);
 
-    setTimeout(() => {
-      appendInvoice(extractedData as InvoiceType);
-      appendFinancialData({
-        totalInvoiceAmount: extractedData.amount,
-        totalAvailableAmount: extractedData.amount / 100 * 90,
-        totalRepaid: 0,
-        totalBorrowed: 0,
+    try {
+      const response = await fetch("/api/invoices", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("bf-token")}`,
+        },
+        body: JSON.stringify(extractedData),
       });
+      const result = await response.json();
+      if (result.success) {
+        toast.success("Invoice submitted for financing");
+        // TODO: refetch invoices
+        // TODO: refetch financial data
+        setExtractedData(null);
+        setFile(null);
+        refetchInvoices();
+        toast.success("Invoice submitted for financing");
+        setActivePage("home");
+      } else {
+        toast.error(result.error || "Failed to create invoice");
+      }
+    } catch (error) {
+      console.error("Error submitting invoice:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to submit invoice");
+    } finally {
       setIsSubmitting(false);
       setLoadingState(false);
-      toast.success("Invoice approved for financing!");
-      setActivePage("home");
-    }, 5000);
-    // setIsProcessing(true);
-    // setExtractedData(null);
-
-    // try {
-
-    //   // Get auth token from localStorage (assuming it's stored there after login)
-    //   const token = localStorage.getItem("bf-token");
-
-    //   if (!token) {
-    //     toast.error("Please log in to upload invoices");
-    //     return;
-    //   }
-
-
-    //   const formData = new FormData();
-    //   formData.append("file", file);
-    //   // const arrayBuffer = await file.arrayBuffer();
-    //   // const parser = new PDFParse({ data: arrayBuffer });
-    //   // const pdfText = await parser.getText();
-
-    //   // Call the extraction API
-    //   const response = await fetch("/api/invoices/extract", {
-    //     method: "POST",
-    //     headers: {
-    //       "Authorization": `Bearer ${token}`,
-    //       // "Content-Type": "multipart/form-data",
-    //     },
-    //     body: formData,
-    //   });
-
-    //   const result = await response.json();
-
-    //   if (!response.ok) {
-    //     throw new Error(result.error || "Failed to process invoice");
-    //   }
-
-    //   if (result.success) {
-    //     setExtractedData(result.data);
-    //     toast.success("Invoice data extracted successfully!");
-
-    //     // Log the extracted data for debugging
-    //     console.log("Extracted invoice data:", result.data);
-    //   } else {
-    //     throw new Error(result.error || "Failed to extract invoice data");
-    //   }
-
-    // } catch (error) {
-    //   console.error("Error processing invoice:", error);
-    //   toast.error(error instanceof Error ? error.message : "Failed to process invoice");
-    // } finally {
-    //   setIsProcessing(false);
-    // }
+    }
   };
 
   const handleCancel = () => {
@@ -184,7 +176,7 @@ const UploadPage = ({ appendInvoice, appendFinancialData, setActivePage, setLoad
       <div className="mt-5">
         {/* Show extracted data if available, otherwise show mock invoice */}
         <div className="p-6 rounded-xl">
-          <Invoice invoice={extractedData as InvoiceType | null} />
+          <Invoice invoice={extractedData || null} />
         </div>
 
         {/* File input */}
