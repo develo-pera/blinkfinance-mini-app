@@ -164,15 +164,16 @@ const UploadPage = ({
         <h1 className="mb-2">Upload invoice</h1>
         {
           file ? (
-            <p className="bg-[var(--bf-card-background)] rounded-xl p-4">{file?.name}</p>
+            <p className="bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] rounded-t-xl p-4">{file?.name}</p>
           ) : (
-            <p className="bg-[var(--bf-card-background)] rounded-xl p-4">No file selected</p>
+            <p className="bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] rounded-t-xl p-4">No file selected</p>
           )
         }
       </div>
-      <div className="mt-5">
+      <div className="">
         {/* Show extracted data if available, otherwise show mock invoice */}
-        <div className="p-6 rounded-xl">
+        {/* bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] */}
+        <div className="p-6 rounded-b-xl bg-[var(--bf-card-background)]">
           <Invoice invoice={extractedData || null} />
         </div>
 

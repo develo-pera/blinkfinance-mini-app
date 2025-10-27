@@ -83,6 +83,12 @@ export const POST = withAuth(async (request: NextRequest, _context: any, user: a
 
     const txHash = await wallet?.writeContract(txRequest);
 
+    if (!txHash) {
+      throw new Error("Failed to approve amount");
+    }
+
+    await wallet?.waitForTransactionReceipt({ hash: txHash, confirmations: 3 });
+
     return NextResponse.json({ success: true, data: invoice, txHash });
   } catch (error) {
     console.error('Error creating invoice:', error);

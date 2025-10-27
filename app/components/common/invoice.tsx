@@ -4,7 +4,7 @@ import { formatInvoiceDate } from "./invoice-list";
 
 const Invoice = ({ invoice }: { invoice: ExtractedInvoiceData | null }) => {
   return (
-    <div className="w-full max-w-[250px] min-h-[350px] m-auto bg-[#f4f4f4] border-2 border-gray-200 rounded-xs p-2">
+    <div className="w-full max-w-[250px] min-h-[350px] m-auto bg-[#f4f4f4] border-1 border-gray-500 dark:border-white rounded-xs p-2">
       <div className="mb-3">
         <p className="text-xs text-gray-500">Invoice Number:</p>
         <p className="text-xs text-gray-500 break-all">{invoice?.invoiceId}</p>
