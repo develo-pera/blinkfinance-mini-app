@@ -4,7 +4,7 @@ import { useBalance } from "wagmi";
 import CONSTANTS from "@/lib/consts";
 
 const useFetchMockStabelcoinBalance = (address: Address | undefined) => {
-  const { data, refetch } = useBalance({
+  const { data, refetch, isFetching } = useBalance({
     address: address,
     chainId: baseSepolia.id,
     token: CONSTANTS.token.mockBFStabelcoinVault,
@@ -13,9 +13,7 @@ const useFetchMockStabelcoinBalance = (address: Address | undefined) => {
     },
   });
 
-  console.log("mock stablecoin balance", data);
-
-  return { data, refetch };
+  return { data, refetch, isFetching };
 };
 
 export default useFetchMockStabelcoinBalance;

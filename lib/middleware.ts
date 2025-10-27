@@ -69,7 +69,7 @@ export function withAuth(handler: (request: NextRequest, context: any, user: any
     const { pathname } = new URL(request.url);
 
     // Skip auth for these routes
-    const publicRoutes = ["/api/auth", "/api/test-db", "/api/valut-contract"];
+    const publicRoutes = ["/api/auth", "/api/test-db", "/api/valut-contract/financial-data/]"];
     const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
 
     if (isPublicRoute) {

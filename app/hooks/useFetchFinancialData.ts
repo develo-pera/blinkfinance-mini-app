@@ -8,10 +8,10 @@ const initialFinancialData: FinancialData = {
 }
 
 const useFetchFinancialData = (userAddress: string) => {
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isFetching, isRefetching, error, refetch } = useQuery({
     queryKey: ["financialData"],
     queryFn: async () => {
-      const response = await fetch(`/api/valut-contract/${userAddress}`);
+      const response = await fetch(`/api/valut-contract/financial-data/${userAddress}`);
       const data = await response.json();
 
       if (data.success) {
@@ -25,7 +25,7 @@ const useFetchFinancialData = (userAddress: string) => {
     initialData: initialFinancialData,
   });
 
-  return { data: data as FinancialData, isLoading, error, refetch };
+  return { data: data as FinancialData, isFetching, isRefetching, error, refetch };
 };
 
 export default useFetchFinancialData;

@@ -1,12 +1,15 @@
 import { FinancialData } from "@/app/page";
 import { RefreshCcwIcon } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 const AccountStatusCard = ({
   name,
   financialData,
   balance,
   totalInvoiceAmount,
-  refetchMockStabelcoinBalance,
+  refetchBalance,
+  isFetchingBalance,
   isFetchingInvoices,
   isFetchingFinancialData,
 }: {
@@ -14,28 +17,22 @@ const AccountStatusCard = ({
   financialData: FinancialData,
   balance: number,
   totalInvoiceAmount: number,
-  refetchMockStabelcoinBalance: () => void,
+  refetchBalance: () => void,
+  isFetchingBalance: boolean,
   isFetchingInvoices: boolean,
   isFetchingFinancialData: boolean,
 }) => {
   const { totalApprovedAmount, totalRepaidAmount, totalBorrowedAmount } = financialData;
-  console.log("balance data", balance);
-  console.log("financial data", financialData);
 
   // Calculate percentages for the segmented bar
   // TODO: this should be account balance for stablecoin that we use
   const availableBalance = totalApprovedAmount - totalBorrowedAmount;
-  const outstandingBorrowed = balance || totalBorrowedAmount - totalRepaidAmount;
+  const outstandingBorrowed = totalBorrowedAmount - totalRepaidAmount;
 
   // Fixed percentage calculations
   const repaidPercentage = (totalRepaidAmount / totalInvoiceAmount) * 100; // ~17%
   const outstandingBorrowedPercentage = (outstandingBorrowed / totalInvoiceAmount) * 100; // 50% of bar
   const availablePercentage = ((totalApprovedAmount - totalBorrowedAmount) / totalInvoiceAmount) * 100; // Up to 97.5%
-
-
-  if (isFetchingFinancialData || isFetchingInvoices) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="bg-[var(--bf-card-background)] p-4 rounded-xl">
@@ -43,7 +40,10 @@ const AccountStatusCard = ({
       <p className="text-sm text-gray-500">Account Balance</p>
       <div className="flex items-center justify-between gap-2">
         <p className="text-3xl font-bold">${balance?.toLocaleString()}</p>
-        <p onClick={refetchMockStabelcoinBalance} className="text-sm text-gray-500 cursor-pointer flex items-center gap-2"> <RefreshCcwIcon className="w-3 h-3" /> Refresh balance</p>
+        <p onClick={() => {
+          console.log("refetching balance");
+          refetchBalance()
+        }} className="text-sm text-gray-500 cursor-pointer flex items-center gap-2"> <RefreshCcwIcon className={cn("w-3 h-3", isFetchingBalance ? "animate-spin" : "")} /> {isFetchingBalance ? "Refreshing" : "Refresh"} balance</p>
       </div>
       <div className="mt-7">
         {/* Segmented Bar Chart */}
@@ -82,19 +82,19 @@ const AccountStatusCard = ({
         <div className="mt-5 grid grid-cols-2 gap-2 text-sm">
           <div>
             <p className="text-gray-500">Total Invoice Amount</p>
-            <p className="font-semibold">{totalInvoiceAmount.toLocaleString()}</p>
+            {isFetchingInvoices ? <Skeleton className="w-20 h-3 rounded-md mt-[8px]" /> : <p className="font-semibold">${totalInvoiceAmount.toLocaleString()}</p>}
           </div>
           <div>
             <p className="text-gray-500">Total Repaid</p>
-            <p className="font-semibold text-blue-600">${totalRepaidAmount.toLocaleString()}</p>
+            {isFetchingFinancialData ? <Skeleton className="w-20 h-3 rounded-md mt-[8px]" /> : <p className="font-semibold text-blue-600">${totalRepaidAmount.toLocaleString()}</p>}
           </div>
           <div>
             <p className="text-gray-500">Outstanding</p>
-            <p className="font-semibold text-green-600">${outstandingBorrowed.toLocaleString()}</p>
+            {isFetchingFinancialData ? <Skeleton className="w-20 h-3 rounded-md mt-[8px]" /> : <p className="font-semibold text-green-600">${outstandingBorrowed.toLocaleString()}</p>}
           </div>
           <div>
             <p className="text-gray-500">Available To Borrow</p>
-            <p className="font-semibold text-purple-600">${totalApprovedAmount.toLocaleString()}</p>
+            {isFetchingFinancialData ? <Skeleton className="w-20 h-3 rounded-md mt-[8px]" /> : <p className="font-semibold text-purple-600">${availableBalance.toLocaleString()}</p>}
           </div>
         </div>
       </div>

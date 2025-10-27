@@ -37,12 +37,14 @@ const UploadPage = ({
   isAuthenticated,
   refetchUser,
   profileCompleted,
+  refetchFinancialData,
 }: {
   refetchInvoices: () => void,
   setActivePage: (page: ActivePage) => void,
   setLoadingState: (loadingState: boolean) => void,
   isAuthenticated: boolean, refetchUser: () => void,
   profileCompleted: boolean,
+  refetchFinancialData: () => void,
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -94,7 +96,6 @@ const UploadPage = ({
     }
   };
 
-
   const handleFinanceInvoice = async () => {
     setIsSubmitting(true);
     setLoadingState(true);
@@ -102,8 +103,6 @@ const UploadPage = ({
       toast.error("Please upload an invoice first");
       return;
     }
-
-    console.log("extractedData", extractedData);
 
     try {
       const response = await fetch("/api/invoices", {
@@ -115,12 +114,12 @@ const UploadPage = ({
       });
       const result = await response.json();
       if (result.success) {
-        toast.success("Invoice submitted for financing");
         // TODO: refetch invoices
         // TODO: refetch financial data
         setExtractedData(null);
         setFile(null);
         refetchInvoices();
+        refetchFinancialData();
         toast.success("Invoice submitted for financing");
         setActivePage("home");
       } else {

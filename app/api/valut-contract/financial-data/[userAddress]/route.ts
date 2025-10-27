@@ -67,26 +67,6 @@ export const GET = async (
     }],
   })
 
-
-  // const approvedAmount = await wallet?.readContract({
-  //   address: CONSTANTS.token.mockBFStabelcoinVault as `0x${string}`,
-  //   abi: [
-  //     {
-  //       name: "approvedAmounts",
-  //       type: "function",
-  //       inputs: [
-  //         { name: "user", type: "address" },
-  //       ],
-  //       outputs: [
-  //         { name: "approvedAmount", type: "uint256" },
-  //       ],
-  //     }
-  //   ],
-  //   functionName: "approvedAmounts",
-  //   args: [userAddress as `0x${string}`],
-  // })
-
-  // console.log("results", approvedAmount);
   let callFailed = false;
   results?.forEach((result) => {
     if (result.status === "failure") {

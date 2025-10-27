@@ -29,6 +29,7 @@ import useFetchMockStabelcoinBalance from "./hooks/useFetchMockStabelcoinBalance
 import { formatUnits } from "viem";
 import useFetchInvoices from "./hooks/useFetchInvoices";
 import useFetchFinancialData from "./hooks/useFetchFinancialData";
+// import { Button } from "@/components/ui/button";
 
 export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile" | "edit-company" | "borrow" | "repay";
 
@@ -64,15 +65,16 @@ export default function Home() {
   const { data: userData, isLoading: isFetchingUser, error: _fetchUserError, refetch: refetchUser } = useFetchUser(address);
   const { data: companyData, isLoading: isFetchingCompany, error: _fetchCompanyError, refetch: refetchCompany } = useFetchCompany(userData?.id);
   const { data: invoices, isLoading: isFetchingInvoices, error: _fetchInvoicesError, refetch: refetchInvoices } = useFetchInvoices(userData?.id);
-  const { data: financialData, isLoading: isFetchingFinancialData, error: _fetchFinancialDataError, refetch: refetchFinancialData } = useFetchFinancialData(userData?.walletAddress);
+  const { data: financialData, isFetching: isFetchingFinancialData, isRefetching: isRefetchingFinancialData, error: _fetchFinancialDataError, refetch: refetchFinancialData } = useFetchFinancialData(userData?.walletAddress);
   const [activePage, setActivePage] = useState<ActivePage>("home");
   const [loadingState, setLoadingState] = useState<boolean>(false);
-  // const [invoices, setInvoices] = useState<IInvoice[]>([]);
-  // const [financialData, setFinancialData] = useState<FinancialData>(initialFinancialData);
-  const { data: mockStablecoinBalance, refetch: refetchMockStabelcoinBalance } = useFetchMockStabelcoinBalance(address);
+  const { data: balance, isFetching: isBalanceLoading, refetch: refetchBalance } = useFetchMockStabelcoinBalance(address);
 
   console.log("context", context);
   console.log("userData", userData);
+
+  console.log("isFetchingFinancialData", isFetchingFinancialData);
+  console.log("isRefetchingFinancialData", isRefetchingFinancialData);
 
   const userName = userData?.displayName || context?.user?.displayName;
   const profileCompleted = userName && userData?.email;
@@ -81,13 +83,6 @@ export default function Home() {
   // console.log("error", error);
 
   const isAuthenticated = typeof window !== 'undefined' ? !!localStorage?.getItem("bf-token") : false;
-
-  // const appendFinancialData = (newFinancialData: FinancialData) => {
-  //   setFinancialData({
-  //     ...financialData,
-  //     ...newFinancialData,
-  //   });
-  // }
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -116,16 +111,6 @@ export default function Home() {
       setMiniAppReady();
     }
   }, [setMiniAppReady, isMiniAppReady]);
-
-  // useEffect(() => {
-  //   if (!invoices) return;
-
-  //   const totalInvoiceAmount = invoices?.reduce((acc, invoice) => acc + invoice.totalAmount, 0);
-  //   setFinancialData({
-  //     ...financialData,
-  //     totalInvoiceAmount,
-  //   });
-  // }, [invoices]);
 
   if (isInMiniAppLoading || !isMiniAppReady || isFetchingUser) {
     return <LoadingAppScreen />;
@@ -157,6 +142,7 @@ export default function Home() {
       >
         <div className="min-h-screen flex flex-col">
           <Header className={applyClassOnHeader(activePage)} loadingState={loadingState} />
+          {/* <Button onClick={() => refetchFinancialData()}>Refetch Financial Data</Button> */}
           <div className="flex flex-1 pb-[90px]">
             {/* TODO: add financial data here from the smart contract. */}
             {
@@ -164,13 +150,14 @@ export default function Home() {
               <HomePage
                 userData={userData}
                 financialData={financialData}
-                balance={Number(formatUnits(mockStablecoinBalance?.value || BigInt(0), 6))}
+                balance={Number(formatUnits(balance?.value || BigInt(0), 6))}
                 setActivePage={setActivePage}
                 refetchUser={refetchUser}
                 isAuthenticated={isAuthenticated}
                 invoices={invoices}
                 isFetchingInvoices={isFetchingInvoices}
-                refetchMockStabelcoinBalance={refetchMockStabelcoinBalance}
+                refetchBalance={refetchBalance}
+                isFetchingBalance={isBalanceLoading}
                 isFetchingFinancialData={isFetchingFinancialData}
               />}
             {
@@ -179,7 +166,9 @@ export default function Home() {
                 financialData={financialData}
                 activePage={activePage}
                 setActivePage={setActivePage}
-                refetchMockStabelcoinBalance={refetchMockStabelcoinBalance}
+                refetchBalance={refetchBalance}
+                refetchFinancialData={refetchFinancialData}
+                isFetchingFinancialData={isFetchingFinancialData}
               />
             }
             {
@@ -191,6 +180,7 @@ export default function Home() {
                 isAuthenticated={isAuthenticated}
                 refetchUser={refetchUser}
                 profileCompleted={profileCompleted}
+                refetchFinancialData={refetchFinancialData}
               />
             }
             {activePage === "wallet" && <WalletPage />}
