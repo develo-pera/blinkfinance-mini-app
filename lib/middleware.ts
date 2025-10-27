@@ -1,12 +1,12 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
-import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import connectDB from '@/lib/mongodb';
-import { User } from '@/models/User';
+import { NextRequest, NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
+import connectDB from "@/lib/mongodb";
+import { User } from "@/models/User";
 
 // JWT secret - in production, this should be in environment variables
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
 // Interface for JWT payload
 interface JWTPayload {
@@ -20,45 +20,45 @@ interface JWTPayload {
 export async function verifyToken(request: NextRequest): Promise<{ user: any; error?: string }> {
   try {
     // Get the Authorization header
-    const authHeader = request.headers.get('authorization');
+    const authHeader = request.headers.get("authorization");
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return { user: null, error: 'No token provided' };
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return { user: null, error: "No token provided" };
     }
 
     // Extract the token
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    const token = authHeader.substring(7); // Remove "Bearer " prefix
 
     // Verify the JWT token
     const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
 
     if (!decoded.userId) {
-      return { user: null, error: 'Invalid token payload' };
+      return { user: null, error: "Invalid token payload" };
     }
 
     // Connect to database and find the user
     await connectDB();
-    const user = await User.findById(decoded.userId).select('-__v');
+    const user = await User.findById(decoded.userId).select("-__v");
 
     if (!user) {
-      return { user: null, error: 'User not found' };
+      return { user: null, error: "User not found" };
     }
 
     // Verify wallet address matches (additional security check)
     if (decoded.walletAddress && user.walletAddress !== decoded.walletAddress) {
-      return { user: null, error: 'Token wallet address mismatch' };
+      return { user: null, error: "Token wallet address mismatch" };
     }
 
     return { user };
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
-      return { user: null, error: 'Invalid token' };
+      return { user: null, error: "Invalid token" };
     }
     if (error instanceof jwt.TokenExpiredError) {
-      return { user: null, error: 'Token expired' };
+      return { user: null, error: "Token expired" };
     }
-    console.error('Token verification error:', error);
-    return { user: null, error: 'Token verification failed' };
+    console.error("Token verification error:", error);
+    return { user: null, error: "Token verification failed" };
   }
 }
 
@@ -69,7 +69,7 @@ export function withAuth(handler: (request: NextRequest, context: any, user: any
     const { pathname } = new URL(request.url);
 
     // Skip auth for these routes
-    const publicRoutes = ['/api/auth', '/api/test-db'];
+    const publicRoutes = ["/api/auth", "/api/test-db", "/api/valut-contract"];
     const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
 
     if (isPublicRoute) {
@@ -81,7 +81,7 @@ export function withAuth(handler: (request: NextRequest, context: any, user: any
 
     if (!user) {
       return NextResponse.json(
-        { success: false, error: error || 'Authentication required' },
+        { success: false, error: error || "Authentication required" },
         { status: 401 }
       );
     }
@@ -99,7 +99,7 @@ export function checkResourceOwnership(userId: string, resourceUserId: string): 
 // Helper function to extract user ID from request params for ownership checks
 export function extractUserIdFromParams(params: any): string | null {
   // Handle both sync and async params (Next.js 15+ compatibility)
-  if (params && typeof params.then === 'function') {
+  if (params && typeof params.then === "function") {
     // Async params - this will be handled by the caller
     return null;
   }

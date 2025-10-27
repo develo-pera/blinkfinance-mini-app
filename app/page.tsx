@@ -28,6 +28,7 @@ import BorrowRepayPage from "./components/pages/borrow-repay";
 import useFetchMockStabelcoinBalance from "./hooks/useFetchMockStabelcoinBalance";
 import { formatUnits } from "viem";
 import useFetchInvoices from "./hooks/useFetchInvoices";
+import useFetchFinancialData from "./hooks/useFetchFinancialData";
 
 export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-profile" | "edit-profile" | "edit-company" | "borrow" | "repay";
 
@@ -41,17 +42,9 @@ const applyClassOnHeader = (activePage: ActivePage) => {
 }
 
 export type FinancialData = {
-  totalInvoiceAmount: number;
-  totalAvailableAmount: number;
-  totalRepaid: number;
-  totalBorrowed: number;
-}
-
-const initialFinancialData: FinancialData = {
-  totalInvoiceAmount: 0,
-  totalAvailableAmount: 0,
-  totalRepaid: 0,
-  totalBorrowed: 0,
+  totalApprovedAmount: number;
+  totalRepaidAmount: number;
+  totalBorrowedAmount: number;
 }
 
 export default function Home() {
@@ -71,10 +64,11 @@ export default function Home() {
   const { data: userData, isLoading: isFetchingUser, error: _fetchUserError, refetch: refetchUser } = useFetchUser(address);
   const { data: companyData, isLoading: isFetchingCompany, error: _fetchCompanyError, refetch: refetchCompany } = useFetchCompany(userData?.id);
   const { data: invoices, isLoading: isFetchingInvoices, error: _fetchInvoicesError, refetch: refetchInvoices } = useFetchInvoices(userData?.id);
+  const { data: financialData, isLoading: isFetchingFinancialData, error: _fetchFinancialDataError, refetch: refetchFinancialData } = useFetchFinancialData(userData?.walletAddress);
   const [activePage, setActivePage] = useState<ActivePage>("home");
   const [loadingState, setLoadingState] = useState<boolean>(false);
   // const [invoices, setInvoices] = useState<IInvoice[]>([]);
-  const [financialData, setFinancialData] = useState<FinancialData>(initialFinancialData);
+  // const [financialData, setFinancialData] = useState<FinancialData>(initialFinancialData);
   const { data: mockStablecoinBalance, refetch: refetchMockStabelcoinBalance } = useFetchMockStabelcoinBalance(address);
 
   console.log("context", context);
@@ -123,15 +117,15 @@ export default function Home() {
     }
   }, [setMiniAppReady, isMiniAppReady]);
 
-  useEffect(() => {
-    if (!invoices) return;
+  // useEffect(() => {
+  //   if (!invoices) return;
 
-    const totalInvoiceAmount = invoices?.reduce((acc, invoice) => acc + invoice.totalAmount, 0);
-    setFinancialData({
-      ...financialData,
-      totalInvoiceAmount,
-    });
-  }, [invoices]);
+  //   const totalInvoiceAmount = invoices?.reduce((acc, invoice) => acc + invoice.totalAmount, 0);
+  //   setFinancialData({
+  //     ...financialData,
+  //     totalInvoiceAmount,
+  //   });
+  // }, [invoices]);
 
   if (isInMiniAppLoading || !isMiniAppReady || isFetchingUser) {
     return <LoadingAppScreen />;
@@ -177,6 +171,7 @@ export default function Home() {
                 invoices={invoices}
                 isFetchingInvoices={isFetchingInvoices}
                 refetchMockStabelcoinBalance={refetchMockStabelcoinBalance}
+                isFetchingFinancialData={isFetchingFinancialData}
               />}
             {
               (activePage === "borrow" || activePage === "repay") &&

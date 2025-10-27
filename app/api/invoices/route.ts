@@ -53,7 +53,7 @@ export const POST = withAuth(async (request: NextRequest, _context: any, user: a
       companyId: userCompany.id,
     });
 
-    const wallet = getEthereumWallet({ localTestnet: true });
+    const wallet = getEthereumWallet();
     const { request: txRequest } = await wallet?.simulateContract({
       account: wallet?.account,
       address: CONSTANTS.token.mockBFStabelcoinVault as `0x${string}`,

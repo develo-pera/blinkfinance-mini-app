@@ -19,6 +19,7 @@ const HomePage = ({
   isFetchingInvoices,
   balance,
   refetchMockStabelcoinBalance,
+  isFetchingFinancialData,
 }: {
   userData?: IUser,
   financialData: FinancialData,
@@ -29,13 +30,34 @@ const HomePage = ({
   isFetchingInvoices: boolean,
   balance: number
   refetchMockStabelcoinBalance: () => void,
+  isFetchingFinancialData: boolean,
 }
 ) => {
+  const fetchVaultContract = async () => {
+    const response = await fetch(`/api/valut-contract/${userData?.walletAddress}`);
+    const data = await response.json();
+    console.log("data", data);
+  }
+
+  const getTotalInvoiceAmount = (): number => {
+    return invoices?.reduce((acc, invoice) => acc + invoice.totalAmount, 0) || 0;
+  }
   return (
     <div className="flex flex-col flex-1">
       <div className="bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] mt-[-1px]">
         <div className="px-4 pt-5 pb-7">
-          <AccountStatusCard name={userData?.displayName || ""} financialData={financialData} balance={balance} refetchMockStabelcoinBalance={refetchMockStabelcoinBalance} isFetchingInvoices={isFetchingInvoices} />
+          <Button onClick={fetchVaultContract}>
+            Get approved amount
+          </Button>
+          <AccountStatusCard
+            name={userData?.displayName || ""}
+            financialData={financialData}
+            totalInvoiceAmount={getTotalInvoiceAmount()}
+            balance={balance}
+            refetchMockStabelcoinBalance={refetchMockStabelcoinBalance}
+            isFetchingInvoices={isFetchingInvoices}
+            isFetchingFinancialData={isFetchingFinancialData}
+          />
           {
             isAuthenticated ? (
               <div className="mt-2 grid grid-cols-2 gap-2">
