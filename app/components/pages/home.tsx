@@ -41,7 +41,8 @@ const HomePage = ({
 
   return (
     <div className="flex flex-col flex-1">
-      <div className="bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)] mt-[-1px]">
+      {/* <div className="bg-[var(--bf-light-green)] dark:bg-[#c181d8] mt-[-1px]"> */}
+      <div>
         <div className="px-4 pt-5 pb-7">
           <AccountStatusCard
             name={userData?.displayName || ""}

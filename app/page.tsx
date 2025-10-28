@@ -35,8 +35,8 @@ export type ActivePage = "home" | "upload" | "wallet" | "profile" | "complete-pr
 
 const applyClassOnHeader = (activePage: ActivePage) => {
   switch (activePage) {
-    case "home":
-      return "bg-[var(--bf-light-green)] dark:bg-[var(--bf-dark-purple)]";
+    // case "home":
+    // return "bg-[var(--bf-light-green)] dark:bg-[#c181d8]";
     default:
       return "";
   }

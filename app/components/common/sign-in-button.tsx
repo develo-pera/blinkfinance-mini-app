@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-// import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Signature, SignatureButton } from "@coinbase/onchainkit/signature";
 import { useQuery } from "@tanstack/react-query";
 
@@ -74,7 +74,7 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
   };
 
   return (
-    <>
+    <div className="mt-auto">
       <Signature
         message={JSON.stringify(message)}
         onSuccess={async (signature) => {
@@ -105,7 +105,7 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
           label="Please sign in to use the app"
           pendingLabel="Please sign in to use the app"
           render={({ onClick, label }) => (
-            <Button className="mt-2 w-full rounded-xl" onClick={onClick}>{isSigningIn ? "Signing in...." : label}</Button>
+            <Button className={cn("mt-2 w-full rounded-xl", className)} onClick={onClick}>{isSigningIn ? "Signing in...." : label}</Button>
           )}
         />
       </Signature>
@@ -113,7 +113,7 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
       {/* <Button onClick={handleSignIn} disabled={isSigningIn} className={cn("mt-2 w-full rounded-xl bg-[var(--bf-card-background)] text-foreground", className)}>
         {isSigningIn ? "Signing in..." : "Please sign in to use the app"}
       </Button> */}
-    </>
+    </div>
   );
 };
 

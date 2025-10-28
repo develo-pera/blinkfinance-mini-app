@@ -26,14 +26,14 @@ const InvoiceList = ({ invoices, isFetchingInvoices, setActivePage, isAuthentica
       <div className="mt-5 grid gap-4">
         {isFetchingInvoices ? (
           <div className="mt-5 px-4">
-            <p className="opacity-80">Loading invoices...</p>
+            <p className="opacity-80 text-sm">Loading invoices...</p>
           </div>
         ) : (
           invoices?.length > 0 ? invoices?.map((invoice) => (
             <InvoiceCard key={invoice.invoiceId} invoice={invoice} />
           )) : (
             <div className="mt-5 px-4">
-              <p className="opacity-80">No invoices found</p>
+              <p className="opacity-80 text-sm">No invoices found</p>
             </div>
           )
         )}
