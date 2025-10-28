@@ -20,7 +20,6 @@ export function RootProvider({ children }: { children: ReactNode }) {
           display: "modal",
           preference: "all",
         },
-        paymaster: process.env.NEXT_PUBLIC_PAYMASTER_URL,
         analytics: false,
       }}
       miniKit={{
