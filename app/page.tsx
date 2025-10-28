@@ -63,7 +63,7 @@ export default function Home() {
   const { context, setMiniAppReady, isMiniAppReady } = useMiniKit();
   const { address } = useAccount();
   const { data: userData, isLoading: isFetchingUser, error: _fetchUserError, refetch: refetchUser } = useFetchUser(address);
-  const { data: companyData, isLoading: isFetchingCompany, error: _fetchCompanyError, refetch: refetchCompany } = useFetchCompany(userData?.id);
+  const { data: companyData, isLoading: _isFetchingCompany, error: _fetchCompanyError, refetch: refetchCompany } = useFetchCompany(userData?.id);
   const { data: invoices, isLoading: isFetchingInvoices, error: _fetchInvoicesError, refetch: refetchInvoices } = useFetchInvoices(userData?.id);
   const { data: financialData, isFetching: isFetchingFinancialData, isRefetching: isRefetchingFinancialData, error: _fetchFinancialDataError, refetch: refetchFinancialData } = useFetchFinancialData(userData?.walletAddress);
   const [activePage, setActivePage] = useState<ActivePage>("home");

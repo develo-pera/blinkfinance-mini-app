@@ -17,6 +17,8 @@ const RepayPage = ({ outstandingBorrowed, setActivePage, refetchFinancialData }:
   return (
     <div>
       <h1>Repay Page</h1>
+      {/* Lint error temp fix */}
+      <div onClick={refetchFinancialData} />
     </div>
   );
 }

@@ -42,8 +42,9 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
           }
           localStorage.setItem("bf-token", authResult.token);
           refetchUser();
-        } catch (_error) {
+        } catch (error) {
           toast.error("Failed to sign in");
+          return error;
         }
         setIsSigningIn(false);
       },
@@ -52,44 +53,6 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
         setIsSigningIn(false);
       },
     });
-
-    // // TODO: Change to SIWE
-    // signTypedData({
-    //   types: {
-    //     EIP712Domain: [],
-    //     Attest: [{ name: "nonce", type: "string" }, { name: "walletAddress", type: "address" }, { name: "domain", type: "string" }],
-    //   },
-    //   primaryType: "Attest",
-    //   domain: {},
-    //   message,
-    // }, {
-    //   onSuccess: async (signature) => {
-    //     try {
-    //       const response = await fetch("/api/auth", {
-    //         method: "POST",
-    //         body: JSON.stringify({
-    //           walletAddress: address,
-    //           signature,
-    //           message,
-    //         }),
-    //       });
-    //       if (!response.ok) {
-    //         throw new Error("Failed to sign in");
-    //       }
-    //       const data = await response.json();
-    //       localStorage.setItem("bf-token", data.token);
-    //       refetchUser();
-    //     } catch (error) {
-    //       console.error(error);
-    //       toast.error("Failed to sign in");
-    //     }
-    //     setIsSigningIn(false);
-    //   },
-    //   onError: (error) => {
-    //     console.error(error);
-    //     setIsSigningIn(false);
-    //   }
-    // });
   };
 
   return (

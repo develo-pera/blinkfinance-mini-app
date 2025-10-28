@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { ActivePage } from "@/app/page";
 import SignInButton from "../common/sign-in-button";
-import { FinancialData } from "@/app/page";
 
 // Interface for extracted invoice data
 export interface ExtractedInvoiceData {

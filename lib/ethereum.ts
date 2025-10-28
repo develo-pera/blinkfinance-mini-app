@@ -1,6 +1,6 @@
 import { createTestClient, createWalletClient, http, publicActions, walletActions } from "viem";
 import type { WalletClient, Chain, Transport, PublicActions, TestClient, WalletActions } from "viem";
-import { base, baseSepolia, foundry } from "viem/chains";
+import { baseSepolia, foundry } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 import { config as appConfig } from "@/app.config";
 
