@@ -5,6 +5,7 @@ import { useAccount, useSignMessage } from "wagmi";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Signature, SignatureButton } from "@coinbase/onchainkit/signature";
 
 const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, className?: string }) => {
   const { address } = useAccount();
@@ -57,6 +58,16 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
 
   return (
     <>
+      <Signature
+        message="Moja poruka"
+      >
+        <SignatureButton
+          render={({ onClick }: { onClick: () => void }) => (
+            <Button onClick={onClick}>Sign with base</Button>
+          )}
+        />
+      </Signature>
+
       <Button onClick={handleSignIn} disabled={isSigningIn} className={cn("mt-2 w-full rounded-xl bg-[var(--bf-card-background)] text-foreground", className)}>
         {isSigningIn ? "Signing in..." : "Please sign in to use the app"}
       </Button>
