@@ -35,9 +35,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Invalid nonce" }, { status: 400 });
     }
 
-    if (new Date(nonce.expiresAt).getTime() < Date.now()) {
-      return NextResponse.json({ message: "Nonce expired" }, { status: 400 });
-    }
+    // if (new Date(nonce.expiresAt).getTime() < Date.now()) {
+    //   return NextResponse.json({ message: "Nonce expired" }, { status: 400 });
+    // }
 
     await Nonce.deleteOne({ nonce: message.nonce });
 
