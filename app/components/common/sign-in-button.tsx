@@ -9,7 +9,7 @@ import { Signature, SignatureButton } from "@coinbase/onchainkit/signature";
 
 const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, className?: string }) => {
   const { address } = useAccount();
-  const { signMessage } = useSignMessage();
+  const { signMessageAsync } = useSignMessage();
   const [isSigningIn, setIsSigningIn] = useState(false);
 
   const handleSignIn = async () => {
@@ -30,7 +30,7 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
       domain: process.env.NEXT_PUBLIC_URL || "localhost:3000",
     };
 
-    signMessage({ message: JSON.stringify(message) }, {
+    signMessageAsync({ message: JSON.stringify(message) }, {
       onSuccess: async (signature) => {
         try {
           const authResponse = await fetch("/api/auth", {
@@ -62,7 +62,7 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
         message="Moja poruka"
       >
         <SignatureButton
-          render={({ onClick }: { onClick: () => void }) => (
+          render={({ onClick }) => (
             <Button onClick={onClick}>Sign with base</Button>
           )}
         />
