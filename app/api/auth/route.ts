@@ -4,6 +4,7 @@ import connectDB from "@/lib/mongodb";
 import { User } from "@/models/User";
 import { createPublicClient, http } from "viem";
 import { base } from "viem/chains";
+import { Nonce } from "@/models/Nonce";
 
 const client = createPublicClient({
   chain: base,
@@ -25,16 +26,25 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Signature and message are required" }, { status: 400 });
     }
 
-    const validSignature = await client.verifyTypedData({
+    if (!message.nonce) {
+      return NextResponse.json({ message: "Inavlid nonce" }, { status: 400 });
+    }
+
+    const nonce = await Nonce.findOne({ nonce: message.nonce });
+    if (!nonce) {
+      return NextResponse.json({ message: "Invalid nonce" }, { status: 400 });
+    }
+
+    if (new Date(nonce.expiresAt).getTime() < Date.now()) {
+      return NextResponse.json({ message: "Nonce expired" }, { status: 400 });
+    }
+
+    await Nonce.deleteOne({ nonce: message.nonce });
+
+    const validSignature = await client?.verifyMessage({
       address: walletAddress,
-      message,
+      message: JSON.stringify(message),
       signature,
-      types: {
-        EIP712Domain: [],
-        Attest: [{ name: "nonce", type: "string" }, { name: "walletAddress", type: "address" }, { name: "domain", type: "string" }],
-      },
-      primaryType: "Attest",
-      domain: {},
     });
 
     if (!validSignature) {
