@@ -18,7 +18,8 @@ export async function POST(request: NextRequest) {
   try {
     const { walletAddress, signature, messageString } = await request.json();
 
-    const message = JSON.parse(messageString);
+    const message = messageString.split(";");
+    const nonceFromMessage = message[0];
 
     console.log(message);
 
@@ -30,11 +31,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Signature and message are required" }, { status: 400 });
     }
 
-    if (!message.nonce) {
+    if (!nonceFromMessage) {
       return NextResponse.json({ message: "Inavlid nonce" }, { status: 400 });
     }
 
-    const nonce = await Nonce.findOne({ nonce: message.nonce });
+    const nonce = await Nonce.findOne({ nonce: nonceFromMessage });
     if (!nonce) {
       return NextResponse.json({ message: "Invalid nonce" }, { status: 400 });
     }
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Nonce expired" }, { status: 400 });
     }
 
-    await Nonce.deleteOne({ nonce: message.nonce });
+    await Nonce.deleteOne({ nonce: nonceFromMessage });
 
     const validSignature = await client?.verifyMessage({
       address: walletAddress,
