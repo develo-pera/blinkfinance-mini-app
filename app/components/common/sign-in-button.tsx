@@ -2,7 +2,7 @@
 
 // import { useState } from "react";
 import { useAccount } from "wagmi";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 // import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Signature, SignatureButton } from "@coinbase/onchainkit/signature";
