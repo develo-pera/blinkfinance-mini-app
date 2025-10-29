@@ -65,7 +65,7 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
   //   });
   // };
 
-  const messageString = `{"nonce": "${nonce.data}", "walletAddress": "${address}", "domain": "${process.env.NEXT_PUBLIC_URL || "localhost:3000"}"}`;
+  const messageString = `${nonce};${address};${process.env.NEXT_PUBLIC_URL || "localhost:3000"}`;
 
   return (
     <div className="mt-auto">
