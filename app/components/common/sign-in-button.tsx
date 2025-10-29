@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+// import { useState } from "react";
 import { useAccount } from "wagmi";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Signature, SignatureButton } from "@coinbase/onchainkit/signature";
 import { useQuery } from "@tanstack/react-query";
@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, className?: string }) => {
   const { address } = useAccount();
   // const { signMessageAsync } = useSignMessage();
-  const [isSigningIn, setIsSigningIn] = useState(false);
+  // const [isSigningIn, setIsSigningIn] = useState(false);
 
   const { data: nonce } = useQuery({
     queryKey: ["nonce"],
@@ -22,6 +22,8 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
     },
     enabled: !!address
   });
+
+  console.log(refetchUser);
 
   // const handleSignIn = async () => {
   //   setIsSigningIn(true);
@@ -77,35 +79,36 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
     <div className="mt-auto">
       <Signature
         message={JSON.stringify(message)}
-        onSuccess={async (signature) => {
-          setIsSigningIn(true);
-          try {
-            const authResponse = await fetch("/api/auth", {
-              method: "POST",
-              body: JSON.stringify({ walletAddress: address, signature, message }),
-            });
-            const authResult = await authResponse.json();
-            if (!authResult.success) {
-              throw new Error(authResult.error || "Failed to sign in");
-            }
-            localStorage.setItem("bf-token", authResult.token);
-            refetchUser();
-          } catch (error) {
-            toast.error("Failed to sign in");
-            throw error;
-          }
-          setIsSigningIn(true);
-        }}
-        onError={() => {
-          toast.error("Failed to sign in");
-          setIsSigningIn(true);
-        }}
+      // onSuccess={async (signature) => {
+      //   setIsSigningIn(true);
+      //   try {
+      //     const authResponse = await fetch("/api/auth", {
+      //       method: "POST",
+      //       body: JSON.stringify({ walletAddress: address, signature, message }),
+      //     });
+      //     const authResult = await authResponse.json();
+      //     if (!authResult.success) {
+      //       throw new Error(authResult.error || "Failed to sign in");
+      //     }
+      //     localStorage.setItem("bf-token", authResult.token);
+      //     refetchUser();
+      //   } catch (error) {
+      //     toast.error("Failed to sign in");
+      //     throw error;
+      //   }
+      //   setIsSigningIn(true);
+      // }}
+      // onError={() => {
+      //   toast.error("Failed to sign in");
+      //   setIsSigningIn(true);
+      // }}
       >
         <SignatureButton
           label="Please sign in to use the app"
-          pendingLabel="Please sign in to use the app"
+          // pendingLabel="Please sign in to use the app"
           render={({ onClick, label }) => (
-            <Button className={cn("mt-2 w-full rounded-xl", className)} onClick={onClick}>{isSigningIn ? "Signing in...." : label}</Button>
+            // <Button className={cn("mt-2 w-full rounded-xl", className)} onClick={onClick}>{isSigningIn ? "Signing in...." : label}</Button>
+            <Button className={cn("mt-2 w-full rounded-xl", className)} onClick={onClick}>{label}</Button>
           )}
         />
       </Signature>
