@@ -77,10 +77,12 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
     domain: process.env.NEXT_PUBLIC_URL || "localhost:3000",
   };
 
+  const messageString = `${nonce};${address};${process.env.NEXT_PUBLIC_URL || "localhost:3000"}`;
+
   return (
     <div className="mt-auto">
       <Signature
-        message={JSON.stringify(message)}
+        message={messageString}
       // onSuccess={async (signature) => {
       //   setIsSigningIn(true);
       //   try {
