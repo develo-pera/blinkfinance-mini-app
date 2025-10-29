@@ -102,14 +102,15 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
       //   toast.error("Failed to sign in");
       //   setIsSigningIn(true);
       // }}
+
       >
         <SignatureButton
           label="Please sign in to use the app"
-          // pendingLabel="Please sign in to use the app"
-          render={({ onClick, label }) => (
-            // <Button className={cn("mt-2 w-full rounded-xl", className)} onClick={onClick}>{isSigningIn ? "Signing in...." : label}</Button>
-            <Button className={cn("mt-2 w-full rounded-xl", className)} onClick={onClick}>{label}</Button>
-          )}
+        // pendingLabel="Please sign in to use the app"
+        // render={({ onClick, label }) => (
+        //   // <Button className={cn("mt-2 w-full rounded-xl", className)} onClick={onClick}>{isSigningIn ? "Signing in...." : label}</Button>
+        //   <Button className={cn("mt-2 w-full rounded-xl", className)} onClick={onClick}>{label}</Button>
+        // )}
         />
       </Signature>
 
