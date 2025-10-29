@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 
 // import { useState } from "react";
 import { useAccount } from "wagmi";
 // import { Button } from "@/components/ui/button";
 // import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+// import { cn } from "@/lib/utils";
 import { Signature, SignatureButton } from "@coinbase/onchainkit/signature";
 import { useQuery } from "@tanstack/react-query";
 
