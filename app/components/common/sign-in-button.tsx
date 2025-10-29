@@ -71,29 +71,29 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
     <div className="mt-auto">
       <Signature
         message={messageString}
-        onSuccess={async (signature) => {
-          setIsSigningIn(true);
-          try {
-            const authResponse = await fetch("/api/auth", {
-              method: "POST",
-              body: JSON.stringify({ walletAddress: address, signature, messageString }),
-            });
-            const authResult = await authResponse.json();
-            if (!authResult.success) {
-              throw new Error(authResult.error || "Failed to sign in");
-            }
-            localStorage.setItem("bf-token", authResult.token);
-            refetchUser();
-          } catch (error) {
-            toast.error("Failed to sign in");
-            throw error;
-          }
-          setIsSigningIn(true);
-        }}
-        onError={() => {
-          toast.error("Failed to sign in");
-          setIsSigningIn(true);
-        }}
+      // onSuccess={async (signature) => {
+      //   setIsSigningIn(true);
+      //   try {
+      //     const authResponse = await fetch("/api/auth", {
+      //       method: "POST",
+      //       body: JSON.stringify({ walletAddress: address, signature, messageString }),
+      //     });
+      //     const authResult = await authResponse.json();
+      //     if (!authResult.success) {
+      //       throw new Error(authResult.error || "Failed to sign in");
+      //     }
+      //     localStorage.setItem("bf-token", authResult.token);
+      //     refetchUser();
+      //   } catch (error) {
+      //     toast.error("Failed to sign in");
+      //     throw error;
+      //   }
+      //   setIsSigningIn(true);
+      // }}
+      // onError={() => {
+      //   toast.error("Failed to sign in");
+      //   setIsSigningIn(true);
+      // }}
       >
         <SignatureButton
           label="Please sign in to use the app"
