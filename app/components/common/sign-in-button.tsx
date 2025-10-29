@@ -2,86 +2,61 @@
 
 "use client";
 
-// import { useState } from "react";
-import { useAccount } from "wagmi";
-// import { Button } from "@/components/ui/button";
-// import { toast } from "sonner";
-// import { cn } from "@/lib/utils";
-import { Signature, SignatureButton } from "@coinbase/onchainkit/signature";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useAccount, useSignMessage } from "wagmi";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, className?: string }) => {
   const { address } = useAccount();
-  // const { signMessageAsync } = useSignMessage();
-  // const [isSigningIn, setIsSigningIn] = useState(false);
+  const { signMessageAsync } = useSignMessage();
+  const [isSigningIn, setIsSigningIn] = useState(false);
 
-  const { data: nonce } = useQuery({
-    queryKey: ["nonce"],
-    queryFn: async () => {
-      const response = await fetch("/api/auth/nonce");
-      const result = await response.json();
-      return result.data;
-    },
-    enabled: !!address
-  });
 
-  console.log(refetchUser);
+  const handleSignIn = async () => {
+    setIsSigningIn(true);
 
-  // const handleSignIn = async () => {
-  //   setIsSigningIn(true);
+    const response = await fetch("/api/auth/nonce");
+    const result = await response.json();
+    if (!result.success) {
+      setIsSigningIn(false);
+      toast.error("Sign in failed");
+      throw new Error(result.error || "Failed to generate nonce");
+    }
+    const nonce = result.data;
 
-  //   const response = await fetch("/api/auth/nonce");
-  //   const result = await response.json();
-  //   if (!result.success) {
-  //     setIsSigningIn(false);
-  //     toast.error("Sign in failed");
-  //     throw new Error(result.error || "Failed to generate nonce");
-  //   }
-  //   const nonce = result.data;
+    const messageString = `{"nonce": "${nonce}", "walletAddress": "${address}", "domain": "${process.env.NEXT_PUBLIC_URL || "localhost:3000"}"}`;
 
-  //   const message = {
-  //     nonce: nonce,
-  //     walletAddress: address as `0x${string}`,
-  //     domain: process.env.NEXT_PUBLIC_URL || "localhost:3000",
-  //   };
-
-  //   signMessageAsync({ message: JSON.stringify(message) }, {
-  //     onSuccess: async (signature) => {
-  //       try {
-  //         const authResponse = await fetch("/api/auth", {
-  //           method: "POST",
-  //           body: JSON.stringify({ walletAddress: address, signature, message }),
-  //         });
-  //         const authResult = await authResponse.json();
-  //         if (!authResult.success) {
-  //           throw new Error(authResult.error || "Failed to sign in");
-  //         }
-  //         localStorage.setItem("bf-token", authResult.token);
-  //         refetchUser();
-  //       } catch (error) {
-  //         toast.error("Failed to sign in");
-  //         return error;
-  //       }
-  //       setIsSigningIn(false);
-  //     },
-  //     onError: (_error) => {
-  //       toast.error("Failed to sign in");
-  //       setIsSigningIn(false);
-  //     },
-  //   });
-  // };
-
-  const message = {
-    nonce: nonce,
-    walletAddress: address as `0x${string}`,
-    domain: process.env.NEXT_PUBLIC_URL || "localhost:3000",
+    signMessageAsync({ message: messageString }, {
+      onSuccess: async (signature) => {
+        try {
+          const authResponse = await fetch("/api/auth", {
+            method: "POST",
+            body: JSON.stringify({ walletAddress: address, signature, messageString }),
+          });
+          const authResult = await authResponse.json();
+          if (!authResult.success) {
+            throw new Error(authResult.error || "Failed to sign in");
+          }
+          localStorage.setItem("bf-token", authResult.token);
+          refetchUser();
+        } catch (error) {
+          toast.error("Failed to sign in");
+          return error;
+        }
+        setIsSigningIn(false);
+      },
+      onError: (_error) => {
+        toast.error("Failed to sign in");
+        setIsSigningIn(false);
+      },
+    });
   };
-
-  const messageString = `${nonce};${address};${process.env.NEXT_PUBLIC_URL || "localhost:3000"}`;
 
   return (
     <div className="mt-auto">
-      <Signature
+      {/* <Signature
         message={messageString}
       // onSuccess={async (signature) => {
       //   setIsSigningIn(true);
@@ -106,7 +81,6 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
       //   toast.error("Failed to sign in");
       //   setIsSigningIn(true);
       // }}
-
       >
         <SignatureButton
           label="Please sign in to use the app"
@@ -116,11 +90,11 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
         //   <Button className={cn("mt-2 w-full rounded-xl", className)} onClick={onClick}>{label}</Button>
         // )}
         />
-      </Signature>
+      </Signature> */}
 
-      {/* <Button onClick={handleSignIn} disabled={isSigningIn} className={cn("mt-2 w-full rounded-xl bg-[var(--bf-card-background)] text-foreground", className)}>
+      <Button onClick={handleSignIn} disabled={isSigningIn} className={cn("mt-2 w-full rounded-xl bg-[var(--bf-card-background)] text-foreground", className)}>
         {isSigningIn ? "Signing in..." : "Please sign in to use the app"}
-      </Button> */}
+      </Button>
     </div>
   );
 };

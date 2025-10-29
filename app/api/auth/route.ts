@@ -16,7 +16,11 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-producti
 
 export async function POST(request: NextRequest) {
   try {
-    const { walletAddress, signature, message } = await request.json();
+    const { walletAddress, signature, messageString } = await request.json();
+
+    const message = JSON.parse(messageString);
+
+    console.log(message);
 
     if (!walletAddress) {
       return NextResponse.json({ message: "Wallet address is required" }, { status: 400 });
@@ -35,15 +39,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Invalid nonce" }, { status: 400 });
     }
 
-    // if (new Date(nonce.expiresAt).getTime() < Date.now()) {
-    //   return NextResponse.json({ message: "Nonce expired" }, { status: 400 });
-    // }
+    if (new Date(nonce.expiresAt).getTime() < Date.now()) {
+      return NextResponse.json({ message: "Nonce expired" }, { status: 400 });
+    }
 
     await Nonce.deleteOne({ nonce: message.nonce });
 
     const validSignature = await client?.verifyMessage({
       address: walletAddress,
-      message: JSON.stringify(message),
+      message: messageString,
       signature,
     });
 
