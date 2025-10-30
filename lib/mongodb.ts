@@ -24,8 +24,9 @@ export const ensureUserIndexes = async () => {
   try {
     // Best-effort: drop legacy index if it exists with wrong options
     await User.collection.dropIndex("fid_1");
-  } catch (_err) {
+  } catch (err) {
     // ignore if index does not exist
+    console.error("Failed to drop User index:", err);
   }
   try {
     await User.syncIndexes();
