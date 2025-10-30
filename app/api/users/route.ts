@@ -1,7 +1,7 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
 import { NextRequest, NextResponse } from "next/server";
-import connectDB from "@/lib/mongodb";
+import connectDB, { ensureUserIndexes } from "@/lib/mongodb";
 import { User } from "@/models/User";
 import { withAuth } from "@/lib/middleware";
 
@@ -24,6 +24,7 @@ export const GET = withAuth(async (_request: NextRequest, _context: any, _user: 
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
+    await ensureUserIndexes();
     const body = await request.json();
 
     const { fid, username, displayName, pfpUrl, bio, email, walletAddress } = body;
@@ -45,15 +46,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = new User({
-      fid,
+    // Sanitize payload: only set fid if it is a non-empty value
+    const userPayload: Record<string, unknown> = {
       username,
       displayName,
       pfpUrl,
       bio,
       email,
-      walletAddress
-    });
+      walletAddress,
+    };
+    if (fid !== null && fid !== undefined && String(fid).trim() !== "") {
+      userPayload.fid = String(fid);
+    }
+
+    const user = new User(userPayload);
 
     await user.save();
 

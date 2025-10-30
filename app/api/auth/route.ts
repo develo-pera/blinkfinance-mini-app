@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import connectDB from "@/lib/mongodb";
+import connectDB, { ensureUserIndexes } from "@/lib/mongodb";
 import { User } from "@/models/User";
 import { createPublicClient, http } from "viem";
 import { base } from "viem/chains";
@@ -80,6 +80,7 @@ export async function POST(request: NextRequest) {
 
     // Connect to database and find or create user
     await connectDB();
+    await ensureUserIndexes();
     let user = await User.findOne({ walletAddress: walletAddress });
 
     if (!user) {
