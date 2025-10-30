@@ -70,7 +70,7 @@ const UploadPage = ({
 
       const formData = new FormData();
       formData.append("file", uploadedFile);
-      const response = await fetch("/api/invoices/extract", {
+      const response = await fetch((process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000") + "/api/invoices/extract", {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("bf-token")}`,
