@@ -3,25 +3,7 @@
 import { ActivePage, FinancialData } from "@/app/page";
 import { Button } from "@/components/ui/button";
 import BorrowPage from "../common/borrow";
-
-const RepayPage = ({ outstandingBorrowed, setActivePage, refetchFinancialData }: { outstandingBorrowed: number, setActivePage: (page: ActivePage) => void, refetchFinancialData: () => void }) => {
-  if (outstandingBorrowed <= 0) {
-    return (
-      <div className="my-5">
-        <p className="text-gray-500 mb-5">You have no debts to repay. Go to the borrow page if you want to borrow more funds.</p>
-        <Button onClick={() => setActivePage("borrow")} className="mt-auto w-full rounded-xl bg-[var(--bf-card-background)] text-foreground">Borrow</Button>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <h1>Repay Page</h1>
-      {/* Lint error temp fix */}
-      <div onClick={refetchFinancialData} />
-    </div>
-  );
-}
+import RepayPage from "../common/repay";
 
 const BorrowRepayPage = ({
   activePage,
@@ -57,7 +39,9 @@ const BorrowRepayPage = ({
           <RepayPage
             outstandingBorrowed={financialData.totalBorrowedAmount - financialData.totalRepaidAmount}
             setActivePage={setActivePage}
+            refetchBalance={refetchBalance}
             refetchFinancialData={refetchFinancialData}
+            isFetchingFinancialData={isFetchingFinancialData}
           />
         )
       }

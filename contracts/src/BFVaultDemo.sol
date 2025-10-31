@@ -48,6 +48,7 @@ contract BFVaultDemo is ERC20, AccessControl, Ownable {
         uint256 borrowedAmount = borrowedAmounts[user];
         uint256 repaidAmount = repaidAmounts[user];
 
+        // require(user == msg.sender, "You can only repay your own debt");
         require(
             borrowedAmount >= repaidAmount + amount, CantRepayMoreThanBorrowed(borrowedAmount, repaidAmount, amount)
         );
