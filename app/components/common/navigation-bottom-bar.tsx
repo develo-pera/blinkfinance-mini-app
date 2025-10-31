@@ -75,7 +75,7 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
     setActivePage(page);
   };
 
-  const showAnimatedIndicator = activePage === "home" || activePage === "upload" || activePage === "wallet" || activePage === "profile" || activePage === "borrow";
+  const showAnimatedIndicator = activePage === "home" || activePage === "upload" || activePage === "wallet" || activePage === "profile" || activePage === "borrow" || activePage === "repay";
 
   // Don't render if keyboard is open
   if (isVirtualKeyboardOpen) {
