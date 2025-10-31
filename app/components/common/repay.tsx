@@ -75,7 +75,7 @@ const RepayPage = ({
   if (outstandingBorrowed <= 0) {
     return (
       <div className="my-5" >
-        <p className="text-gray-500 mb-5" > You have no debts to repay.Go to the borrow page if you want to borrow more funds.</p>
+        <p className="text-gray-500 mb-5" > You have no debts to repay. Go to the borrow page if you want to borrow more funds.</p>
         < Button onClick={() => setActivePage("borrow")} className="mt-auto w-full rounded-xl bg-[var(--bf-card-background)] text-foreground" > Borrow </Button>
       </div>
     );
