@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Context } from "@farcaster/miniapp-sdk";
 import { Address } from "viem";
-import { ReceiptText, ScanFace, SquarePlus, Wallet } from "lucide-react";
+import { ArrowDownUp, ReceiptText, ScanFace, SquarePlus, Wallet } from "lucide-react";
 import UserAvatar from "./user-avatar";
 import { ActivePage } from "@/app/page";
 import { useEffect, useRef } from "react";
@@ -14,6 +14,7 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
   const uploadRef = useRef<HTMLDivElement>(null);
   const walletRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const borrowRef = useRef<HTMLDivElement>(null);
   const { isVirtualKeyboardOpen } = useIsVirtualKeyboardOpen();
 
   const updateIndicatorPosition = () => {
@@ -25,6 +26,9 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
     switch (activePage) {
       case "home":
         targetElement = homeRef.current;
+        break;
+      case "borrow":
+        targetElement = borrowRef.current;
         break;
       case "upload":
         targetElement = uploadRef.current;
@@ -71,7 +75,7 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
     setActivePage(page);
   };
 
-  const showAnimatedIndicator = activePage === "home" || activePage === "upload" || activePage === "wallet" || activePage === "profile";
+  const showAnimatedIndicator = activePage === "home" || activePage === "upload" || activePage === "wallet" || activePage === "profile" || activePage === "borrow";
 
   // Don't render if keyboard is open
   if (isVirtualKeyboardOpen) {
@@ -101,6 +105,21 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
             className={cn(
               "w-6 h-6 stroke-[1.5px] transition-all duration-200",
               activePage === "home"
+                ? "text-background opacity-100"
+                : "text-foreground opacity-70"
+            )}
+          />
+        </div>
+
+        <div
+          ref={borrowRef}
+          onClick={() => handlePageClick("borrow")}
+          className="relative flex items-center justify-center cursor-pointer hover:scale-110 transition-transform duration-200 z-10"
+        >
+          <ArrowDownUp
+            className={cn(
+              "w-6 h-6 stroke-[1.5px] transition-all duration-200",
+              activePage === "borrow"
                 ? "text-background opacity-100"
                 : "text-foreground opacity-70"
             )}

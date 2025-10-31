@@ -82,7 +82,7 @@ const RepayPage = ({
   }
 
   return (
-    <div>
+    <div className="my-5">
       <Input ref={amountToRepayInputRef} className="text-4xl font-bold py-10" type="number" placeholder="$" />
       <p className="text-gray-500 mt-2 mb-5 text-sm">You owe ${outstandingBorrowed.toLocaleString()}.</p>
       <Button
