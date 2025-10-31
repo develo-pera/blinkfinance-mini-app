@@ -119,7 +119,7 @@ const NavigationBottomBar = ({ className, user, address, setActivePage, activePa
           <ArrowDownUp
             className={cn(
               "w-6 h-6 stroke-[1.5px] transition-all duration-200",
-              activePage === "borrow"
+              activePage === "borrow" || activePage === "repay"
                 ? "text-background opacity-100"
                 : "text-foreground opacity-70"
             )}
