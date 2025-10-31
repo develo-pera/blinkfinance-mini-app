@@ -1,3 +1,5 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 import { withAuth } from "@/lib/middleware";
 import { NextRequest, NextResponse } from "next/server";
 import { getEthereumWallet } from "@/lib/ethereum";
