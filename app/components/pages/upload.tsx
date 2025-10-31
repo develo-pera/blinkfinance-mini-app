@@ -18,17 +18,6 @@ export interface ExtractedInvoiceData {
   totalAmount: number;
 }
 
-// const mockExtractInvoiceData = {
-//   id: 1,
-//   invoiceNumber: "2403251",
-//   eInvoiceNumber: "d1b2650e-1e64-4cb2-9e5b-a49e23f54802",
-//   valid: true,
-//   status: "Approved",
-//   invoiceDate: new Date(),
-//   dueDate: new Date(),
-//   amount: 14653.00
-// } as ExtractedInvoiceData;
-
 const UploadPage = ({
   refetchInvoices,
   setActivePage,

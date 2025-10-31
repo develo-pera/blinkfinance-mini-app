@@ -183,7 +183,14 @@ export default function Home() {
                 refetchFinancialData={refetchFinancialData}
               />
             }
-            {activePage === "wallet" && <WalletPage />}
+            {
+              activePage === "wallet" &&
+              <WalletPage
+                balance={Number(formatUnits(balance?.value || BigInt(0), 6))}
+                isFetchingBalance={isBalanceLoading}
+                refetchBalance={refetchBalance}
+              />
+            }
             {
               activePage === "profile" &&
               <ProfilePage

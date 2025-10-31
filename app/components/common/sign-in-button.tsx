@@ -14,18 +14,6 @@ const SignInButton = ({ refetchUser, className }: { refetchUser: () => void, cla
   const { address } = useAccount();
   const { signMessageAsync } = useSignMessage();
   const [isSigningIn, setIsSigningIn] = useState(false);
-  // const { data, isLoading, error } = useQuery({
-  //   queryKey: ["nonce"],
-  //   queryFn: async () => {
-  //     const response = await fetch("/api/auth/nonce");
-  //     const result = await response.json();
-  //     return result.data;
-  //   },
-  //   enabled: !!address
-  // });
-
-  // console.log(data);
-
 
   const handleSignIn = async () => {
     setIsSigningIn(true);
